@@ -147,6 +147,18 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
             }
         });
 
+        Iterator<NodeData> it = graph.nodeIter();
+        while(it.hasNext()){
+            NodeData n = it.next();
+            if(n.getKey() == src){
+                dist.put(n.getKey(),0D);
+                prev.put(n.getKey(),-1);
+                continue;
+            }
+            dist.put(n.getKey(),Double.MAX_VALUE);
+            prev.put(n.getKey(),-1);
+        }
+
         Q.add(src);
         while (!Q.isEmpty()){
             int n = Q.poll();
@@ -155,7 +167,8 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
                 EdgeData e = edges.next();
                 int neighbor = e.getDest();
                 double alt = dist.get(n) + e.getWeight();
-                if (alt < dist.get(neighbor)){
+                double d = dist.get(neighbor);
+                if (alt < d){
                     dist.put(neighbor,alt);
                     prev.put(neighbor,n);
                 }
@@ -163,7 +176,21 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
         }
 
 
-        return null;
+        Stack<NodeData> ret = new Stack<>();
+        int p = prev.get(dest);
+        while(p!= -1){
+            if(ret.size() == getGraph().nodeSize()){
+                return null;
+            } else{
+              ret.push(graph.getNode(p));
+              p = prev.get(p);
+            }
+        }
+
+        ret.add(getGraph().getNode(dest));
+
+
+        return ret;
     }
 
     /**

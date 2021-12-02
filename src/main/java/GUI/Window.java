@@ -11,14 +11,14 @@ public class Window {
 
     DirectedWeightedGraphAlgorithms ga;
     JFrame window;
-    GrapPanel grapPanel;
+    GrapPanel graphPanel;
     SidePanel sidePanel;
     MenuBar menuBar;
     public Window(DirectedWeightedGraphAlgorithms graphAlgorithms){
         ga = graphAlgorithms;
 
         window = new JFrame();
-        grapPanel = new GrapPanel(ga,((DirectedWeightedGraphAlgorithmsImpl)ga).getMin(),((DirectedWeightedGraphAlgorithmsImpl)ga).getMax());
+        graphPanel = new GrapPanel(ga,((DirectedWeightedGraphAlgorithmsImpl)ga).getMin(),((DirectedWeightedGraphAlgorithmsImpl)ga).getMax());
         sidePanel = new SidePanel(graphAlgorithms);
         menuBar = new MenuBar(graphAlgorithms);
 
@@ -27,9 +27,15 @@ public class Window {
         window.setVisible(true);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        graphPanel.setNodeSelectionListener(sidePanel);
+
+        sidePanel.setMaximumSize(new Dimension(50,800));
+
         window.add(sidePanel, BorderLayout.EAST);
-        window.add(grapPanel,BorderLayout.CENTER);
+        window.add(graphPanel,BorderLayout.CENTER);
         window.setJMenuBar(menuBar);
+
+
     }
 
 }

@@ -14,16 +14,17 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class GrapPanel extends JPanel implements MouseListener, MouseWheelListener , MouseMotionListener {
-    DirectedWeightedGraphAlgorithms ga;
-    GeoLocation min,max;
+    private DirectedWeightedGraphAlgorithms ga;
+    private GeoLocation min,max;
 
 
-    Point2D pos;
-    Point2D prevPos;
-    Point2D nextPos;
-    double zoom;
+    private Point2D pos;
+    private Point2D prevPos;
+    private Point2D nextPos;
+    private double zoom;
 
-    HashMap<Shape,Integer> circles;
+    private HashMap<Shape,Integer> circles;
+    private NodeSelectedListener listener;
 
     GrapPanel(DirectedWeightedGraphAlgorithms g, GeoLocation min,GeoLocation max){
         ga = g;
@@ -63,7 +64,10 @@ public class GrapPanel extends JPanel implements MouseListener, MouseWheelListen
             drawArrow(g,p1,p2,15F);
 
         }
+    }
 
+    public void setNodeSelectionListener(NodeSelectedListener l){
+        listener = l;
     }
 
 
@@ -73,7 +77,7 @@ public class GrapPanel extends JPanel implements MouseListener, MouseWheelListen
         return new GeoLocationImpl(newx,newy,0);
     }
 
-    public static void drawArrow (final Graphics2D gfx, final GeoLocation start, final GeoLocation end, final float arrowSize) {
+    private void drawArrow (final Graphics2D gfx, final GeoLocation start, final GeoLocation end, final float arrowSize) {
 
         final double startx = start.x();
         final double starty = start.y();
@@ -117,12 +121,14 @@ public class GrapPanel extends JPanel implements MouseListener, MouseWheelListen
      */
     @Override
     public void mouseClicked(MouseEvent e) {
-        for (Map.Entry<Shape, Integer> entery :
+        for (Map.Entry<Shape, Integer> entry :
                 circles.entrySet()) {
-            if (entery.getKey().contains(e.getPoint())) {
-                System.out.println(entery.getValue());
+            if (entry.getKey().contains(e.getPoint())) {
+                listener.selectNode(entry.getValue());
+                return;
             }
         }
+        listener.selectNode(-1);
     }
 
     /**
@@ -173,7 +179,8 @@ public class GrapPanel extends JPanel implements MouseListener, MouseWheelListen
      */
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-        zoom += (double)(-e.getWheelRotation()) / 10;
+        if(zoom + (double)(-e.getWheelRotation()) / 10 > 0.1)
+            zoom += (double)(-e.getWheelRotation()) / 10;
         System.out.println(zoom);
         getTopLevelAncestor().repaint();
     }
