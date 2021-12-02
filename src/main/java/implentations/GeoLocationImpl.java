@@ -1,3 +1,5 @@
+package implentations;
+
 import api.GeoLocation;
 
 public class GeoLocationImpl implements GeoLocation {

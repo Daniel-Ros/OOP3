@@ -1,4 +1,5 @@
-import api.Drawable;
+package implentations;
+
 import api.EdgeData;
 import api.GeoLocation;
 import api.NodeData;
@@ -6,7 +7,7 @@ import api.NodeData;
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class NodeDataImpl implements NodeData, Drawable {
+public class NodeDataImpl implements NodeData {
     private int id,tag;
     private double weight;
     private GeoLocation geoLocation;
@@ -21,6 +22,7 @@ public class NodeDataImpl implements NodeData, Drawable {
         this.geoLocation = geoLocation;
         this.info = info;
         this.toEdges = new HashMap<>();
+        this.fromEdges = new HashMap<>();
     }
 
     @Override
@@ -73,7 +75,7 @@ public class NodeDataImpl implements NodeData, Drawable {
     }
 
     public void addEdgeFrom(EdgeData e){
-        toEdges.put(e.getSrc(),e);
+        fromEdges.put(e.getSrc(),e);
     }
 
     public void removeEdgeTo(EdgeData e){
@@ -92,8 +94,8 @@ public class NodeDataImpl implements NodeData, Drawable {
         return toEdges.values().iterator();
     }
 
-    @Override
-    public void draw() {
-
+    public Iterator<EdgeData> getTransposedEdgeIter(){
+        return fromEdges.values().iterator();
     }
+
 }

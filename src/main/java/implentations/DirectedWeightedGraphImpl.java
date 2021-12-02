@@ -1,3 +1,5 @@
+package implentations;
+
 import api.DirectedWeightedGraph;
 import api.EdgeData;
 import api.NodeData;
@@ -7,6 +9,10 @@ import java.util.Iterator;
 
 public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
     HashMap<Integer, NodeData> nodes;
+
+    DirectedWeightedGraphImpl(){
+        this.nodes = new HashMap<>();
+    }
 
     private int numOfEdges = 0;
     /**
@@ -54,7 +60,8 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
      */
     @Override
     public void connect(int src, int dest, double w) {
-        if (getEdge(src,dest) != null) return;
+        if (getEdge(src,dest) != null)
+            return;
         numOfEdges++;
         EdgeDataImpl e = new EdgeDataImpl(src,dest,w);
         ((NodeDataImpl)nodes.get(src)).addEdgeTo(e);
@@ -81,7 +88,14 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
      */
     @Override
     public Iterator<EdgeData> edgeIter() {
-         return null;
+        CominedIterator<EdgeData> it = new CominedIterator<>();
+
+        for (NodeData n:nodes.values()) {
+            NodeDataImpl node = (NodeDataImpl) n;
+            it.addIt(node.getEdgeIter());
+        }
+
+        return it;
     }
 
     /**

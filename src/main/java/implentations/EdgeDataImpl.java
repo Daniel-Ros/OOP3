@@ -1,4 +1,8 @@
+package implentations;
+
 import api.EdgeData;
+
+import java.awt.*;
 
 public class EdgeDataImpl implements EdgeData {
     private int src,dest,tag;
@@ -53,4 +57,5 @@ public class EdgeDataImpl implements EdgeData {
     public void setTag(int t) {
         tag = t;
     }
+
 }

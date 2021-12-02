@@ -1,5 +1,7 @@
+import GUI.Window;
 import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
+import implentations.DirectedWeightedGraphAlgorithmsImpl;
 
 
 /**
@@ -13,9 +15,7 @@ public class Ex2 {
      */
     public static DirectedWeightedGraph getGrapg(String json_file) {
         DirectedWeightedGraph ans = null;
-        // ****** Add your code here ******
-        //
-        // ********************************
+
         return ans;
     }
     /**
@@ -25,9 +25,10 @@ public class Ex2 {
      */
     public static DirectedWeightedGraphAlgorithms getGrapgAlgo(String json_file) {
         DirectedWeightedGraphAlgorithms ans = null;
-        // ****** Add your code here ******
-        //
-        // ********************************
+
+        ans = new DirectedWeightedGraphAlgorithmsImpl();
+        ans.load(json_file);
+
         return ans;
     }
     /**
@@ -37,12 +38,10 @@ public class Ex2 {
      */
     public static void runGUI(String json_file) {
         DirectedWeightedGraphAlgorithms alg = getGrapgAlgo(json_file);
-        // ****** Add your code here ******
-        //
-        // ********************************
+        Window w = new Window(alg);
     }
 
     public static void main(String[] args) {
-
+        runGUI("data/G3.json");
     }
 }
