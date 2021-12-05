@@ -138,59 +138,9 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
      */
     @Override
     public List<NodeData> shortestPath(int src, int dest) {
-        HashMap<Integer,Double> dist = new HashMap<>();
-        HashMap<Integer,Integer> prev = new HashMap<>();
-        PriorityQueue<Integer> Q = new PriorityQueue<>(new Comparator<Integer>() {
-            @Override
-            public int compare(Integer o1, Integer o2) {
-                return (int)(dist.get(o1) - dist.get(o2));
-            }
-        });
-
-        Iterator<NodeData> it = graph.nodeIter();
-        while(it.hasNext()){
-            NodeData n = it.next();
-            if(n.getKey() == src){
-                dist.put(n.getKey(),0D);
-                prev.put(n.getKey(),-1);
-                continue;
-            }
-            dist.put(n.getKey(),Double.MAX_VALUE);
-            prev.put(n.getKey(),-1);
-        }
-
-        Q.add(src);
-        while (!Q.isEmpty()){
-            int n = Q.poll();
-            Iterator<EdgeData> edges = graph.edgeIter(n);
-            while (edges.hasNext()){
-                EdgeData e = edges.next();
-                int neighbor = e.getDest();
-                double alt = dist.get(n) + e.getWeight();
-                double d = dist.get(neighbor);
-                if (alt < d){
-                    dist.put(neighbor,alt);
-                    prev.put(neighbor,n);
-                }
-            }
-        }
-
-
-        Stack<NodeData> ret = new Stack<>();
-        int p = prev.get(dest);
-        while(p!= -1){
-            if(ret.size() == getGraph().nodeSize()){
-                return null;
-            } else{
-              ret.push(graph.getNode(p));
-              p = prev.get(p);
-            }
-        }
-
-        ret.add(getGraph().getNode(dest));
-
-
-        return ret;
+        Dijkstra d = new Dijkstra(src,dest,getGraph());
+        d.run();
+        return d.getRet();
     }
 
     /**
@@ -201,7 +151,38 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
      */
     @Override
     public NodeData center() {
-        return null;
+        if(this.isConnected() == false)
+            return null;
+
+        ArrayList<Dijkstra> dijkstras = new ArrayList<>();
+        Iterator<NodeData> it = graph.nodeIter();
+        while (it.hasNext()){
+            NodeData n = it.next();
+            Dijkstra d = new Dijkstra(n.getKey(),graph);
+            dijkstras.add(d);
+            d.start();
+        }
+
+        for (Dijkstra d :
+                dijkstras) {
+            try {
+                d.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        int ret = -1;
+        double minmax = Double.POSITIVE_INFINITY;
+        for (Dijkstra d :
+                dijkstras) {
+            double m = d.getMaximumDist();
+            if(m < minmax){
+                minmax = m;
+                ret = d.getSrc();
+            }
+
+        }
+        return graph.getNode(ret);
     }
 
     /**
@@ -276,7 +257,7 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
             for (JsonElement e : edges){
                 int src = e.getAsJsonObject().get("src").getAsInt();
                 int dest = e.getAsJsonObject().get("dest").getAsInt();
-                double w = e.getAsJsonObject().get("w").getAsInt();
+                double w = e.getAsJsonObject().get("w").getAsDouble();
 
                 g.connect(src,dest,w);
             }

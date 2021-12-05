@@ -2,6 +2,7 @@ package GUI;
 
 import api.*;
 import implentations.GeoLocationImpl;
+import implentations.NodeDataImpl;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,9 +10,7 @@ import java.awt.event.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 public class GrapPanel extends JPanel implements MouseListener, MouseWheelListener , MouseMotionListener {
     private DirectedWeightedGraphAlgorithms ga;
@@ -26,7 +25,9 @@ public class GrapPanel extends JPanel implements MouseListener, MouseWheelListen
     private HashMap<Shape,Integer> circles;
     private NodeSelectedListener listener;
 
+    long lastClicked;
     GrapPanel(DirectedWeightedGraphAlgorithms g, GeoLocation min,GeoLocation max){
+        lastClicked = 0;
         ga = g;
         this.min = min;
         this.max = max;
@@ -37,6 +38,7 @@ public class GrapPanel extends JPanel implements MouseListener, MouseWheelListen
         addMouseListener(this);
         addMouseMotionListener(this);
         addMouseWheelListener(this);
+
     }
 
     public void paint(Graphics graphics){
@@ -50,6 +52,7 @@ public class GrapPanel extends JPanel implements MouseListener, MouseWheelListen
             GeoLocation posInScreen = getPoint2ScreenCord(n.getLocation().x(),n.getLocation().y());
             Ellipse2D c = new Ellipse2D.Double(posInScreen.x() - (int)(10*zoom),(int)posInScreen.y() - (int)(10*zoom),(int)(20*zoom),(int)(20*zoom));
             circles.put(c,n.getKey());
+            g.setPaint(new Color(n.getTag()));
             g.draw(c);
             g.drawString(n.getInfo(),(int)posInScreen.x() - 15 ,(int)posInScreen.y() - 15);
         }
@@ -61,6 +64,12 @@ public class GrapPanel extends JPanel implements MouseListener, MouseWheelListen
                                                           graph.getNode(e.getSrc()).getLocation().y());
             GeoLocation p2 = getPoint2ScreenCord(graph.getNode(e.getDest()).getLocation().x(),
                                                     graph.getNode(e.getDest()).getLocation().y());
+            g.setPaint(new Color(e.getTag()));
+            if(e.getTag() != 0){
+                g.setStroke(new BasicStroke(10));
+            }else{
+                g.setStroke(new BasicStroke(1));
+            }
             drawArrow(g,p1,p2,15F);
 
         }
@@ -72,8 +81,14 @@ public class GrapPanel extends JPanel implements MouseListener, MouseWheelListen
 
 
     private GeoLocation getPoint2ScreenCord(double x,double y){
-        double newx = (((max.x() - x) / (max.x() - min.x()))*this.getWidth()*0.9 + this.getHeight()*0.05 + pos.getX()) * zoom;
+        double newx = (((max.x() - x) / (max.x() - min.x()))*this.getWidth()*0.9 + this.getWidth()*0.05 + pos.getX()) * zoom;
         double newy = (((max.y() - y) / (max.y() - min.y()))*this.getHeight()*0.9 + this.getHeight()*0.05 + pos.getY()) * zoom;
+        return new GeoLocationImpl(newx,newy,0);
+    }
+
+    private GeoLocation getScreenCord2Point(double x,double y){
+        double newx = max.x() - (((x/zoom)-pos.getX()-getWidth()*0.05D)*(max.x() - min.x()))/(getWidth()*0.9D);
+        double newy = max.y() - (((y/zoom)-pos.getY()-getHeight()*0.05D)*(max.y() - min.y()))/(getHeight()*0.9D);
         return new GeoLocationImpl(newx,newy,0);
     }
 
@@ -121,6 +136,7 @@ public class GrapPanel extends JPanel implements MouseListener, MouseWheelListen
      */
     @Override
     public void mouseClicked(MouseEvent e) {
+        getScreenCord2Point(e.getX(), e.getY());
         for (Map.Entry<Shape, Integer> entry :
                 circles.entrySet()) {
             if (entry.getKey().contains(e.getPoint())) {
@@ -129,6 +145,16 @@ public class GrapPanel extends JPanel implements MouseListener, MouseWheelListen
             }
         }
         listener.selectNode(-1);
+
+        Date date = new Date();
+        long time = date.getTime();
+        if(time - lastClicked < 200){
+            GeoLocation p = getScreenCord2Point(e.getX(),e.getY());
+            NodeData n = new NodeDataImpl((int)(Math.random()*10000),0,p,"");
+            ga.getGraph().addNode(n);
+            repaint();
+        }
+        lastClicked = time;
     }
 
     /**
@@ -181,7 +207,6 @@ public class GrapPanel extends JPanel implements MouseListener, MouseWheelListen
     public void mouseWheelMoved(MouseWheelEvent e) {
         if(zoom + (double)(-e.getWheelRotation()) / 10 > 0.1)
             zoom += (double)(-e.getWheelRotation()) / 10;
-        System.out.println(zoom);
         getTopLevelAncestor().repaint();
     }
 
@@ -212,6 +237,5 @@ public class GrapPanel extends JPanel implements MouseListener, MouseWheelListen
      */
     @Override
     public void mouseMoved(MouseEvent e) {
-
     }
 }
