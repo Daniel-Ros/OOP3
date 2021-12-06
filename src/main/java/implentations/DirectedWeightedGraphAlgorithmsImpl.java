@@ -2,15 +2,12 @@ package implentations;
 
 import api.*;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
+import com.google.gson.stream.JsonWriter;
 
 import javax.naming.ldap.HasControls;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 
 
@@ -42,7 +39,7 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
 
     /**
      * Computes a deep copy of this weighted graph.
-     *
+     *  TODO: implement
      * @return
      */
     @Override
@@ -190,7 +187,7 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
      * the sum of the weights of all the consecutive (pairs) of nodes (directed) is the "cost" of the solution -
      * the lower the better.
      * See: https://en.wikipedia.org/wiki/Travelling_salesman_problem
-     *
+     * TODO: implement
      * @param cities
      */
     @Override
@@ -207,7 +204,41 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
      */
     @Override
     public boolean save(String file) {
-        return false;
+        File output = new File(file);
+        JsonObject object = new JsonObject();
+        JsonArray edges = new JsonArray();
+        JsonArray nodes = new JsonArray();
+
+        Iterator<EdgeData> eit = getGraph().edgeIter();
+        while (eit.hasNext()) {
+            EdgeData e = eit.next();
+            JsonObject je = new JsonObject();
+            je.addProperty("src", e.getSrc());
+            je.addProperty("dest", e.getDest());
+            je.addProperty("w", e.getWeight());
+            edges.add(je);
+        }
+
+        Iterator<NodeData> nit = getGraph().nodeIter();
+        while (nit.hasNext()) {
+            NodeData n = nit.next();
+            JsonObject je = new JsonObject();
+            je.addProperty("id", n.getKey());
+            je.addProperty("pos", "" + n.getLocation().x() + "," + n.getLocation().y() + "," + n.getLocation().z());
+            nodes.add(je);
+        }
+
+        object.add("Edges", edges);
+        object.add("Nodes", nodes);
+
+
+        Gson g = new GsonBuilder().setPrettyPrinting().create();
+        try {
+            Files.writeString(output.toPath(), g.toJson(object));
+        } catch (IOException e) {
+           return false;
+        }
+        return true;
     }
 
     /**
