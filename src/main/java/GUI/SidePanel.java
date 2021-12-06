@@ -103,7 +103,7 @@ public class SidePanel extends JPanel implements ActionListener,NodeSelectedList
         else if (e.getSource() == center) {
             NodeData n = ga.center();
             if(n != null){
-                n.setTag(Color.pink.getRGB());
+                n.setTag(Color.red.getRGB());
                 status.setText("Center is:" + n.getKey());
                 getTopLevelAncestor().repaint();
             }

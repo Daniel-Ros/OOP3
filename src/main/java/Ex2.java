@@ -42,6 +42,6 @@ public class Ex2 {
     }
 
     public static void main(String[] args) {
-        runGUI("data/Test1.json");
+        runGUI("data/kaki.json");
     }
 }

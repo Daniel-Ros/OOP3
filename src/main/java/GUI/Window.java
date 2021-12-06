@@ -34,8 +34,6 @@ public class Window {
         window.add(sidePanel, BorderLayout.EAST);
         window.add(graphPanel,BorderLayout.CENTER);
         window.setJMenuBar(menuBar);
-
-
     }
 
 }

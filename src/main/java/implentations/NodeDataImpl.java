@@ -4,6 +4,7 @@ import api.EdgeData;
 import api.GeoLocation;
 import api.NodeData;
 
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -16,6 +17,16 @@ public class NodeDataImpl implements NodeData {
     private HashMap<Integer, EdgeData> toEdges;
     private HashMap<Integer, EdgeData> fromEdges;
 
+    public NodeDataImpl(int id, GeoLocation geoLocation) {
+        this.id = id;
+        this.tag = Color.black.getRGB();
+        this.geoLocation = geoLocation;
+        this.info = "";
+        this.toEdges = new HashMap<>();
+        this.fromEdges = new HashMap<>();
+        this.weight = 0;
+    }
+
     public NodeDataImpl(int id, int tag, GeoLocation geoLocation, String info) {
         this.id = id;
         this.tag = tag;
@@ -23,6 +34,7 @@ public class NodeDataImpl implements NodeData {
         this.info = info;
         this.toEdges = new HashMap<>();
         this.fromEdges = new HashMap<>();
+        this.weight = 0;
     }
 
     @Override

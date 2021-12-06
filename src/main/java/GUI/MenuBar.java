@@ -5,6 +5,7 @@ import api.DirectedWeightedGraphAlgorithms;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 
 public class MenuBar extends JMenuBar implements ActionListener {
@@ -50,6 +51,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
             System.exit(0);
         }else if(e.getSource() == load){
             JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
             fileChooser.showOpenDialog(null);
             if(ga.load(fileChooser.getSelectedFile().getPath())){
                 System.out.println("loaded");

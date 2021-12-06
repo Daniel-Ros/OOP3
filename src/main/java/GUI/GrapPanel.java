@@ -1,6 +1,7 @@
 package GUI;
 
 import api.*;
+import implentations.DirectedWeightedGraphAlgorithmsImpl;
 import implentations.GeoLocationImpl;
 import implentations.NodeDataImpl;
 
@@ -42,6 +43,11 @@ public class GrapPanel extends JPanel implements MouseListener, MouseWheelListen
     }
 
     public void paint(Graphics graphics){
+        if(ga.getGraph() == null){
+            return;
+        }
+        this.min =((DirectedWeightedGraphAlgorithmsImpl)ga).getMin();
+        this.max = ((DirectedWeightedGraphAlgorithmsImpl)ga).getMax();
         circles = new HashMap<>();
         DirectedWeightedGraph graph = ga.getGraph();
         Graphics2D g = (Graphics2D)graphics;
