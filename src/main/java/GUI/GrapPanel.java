@@ -146,8 +146,15 @@ public class GrapPanel extends JPanel implements MouseListener, MouseWheelListen
         for (Map.Entry<Shape, Integer> entry :
                 circles.entrySet()) {
             if (entry.getKey().contains(e.getPoint())) {
-                listener.selectNode(entry.getValue());
-                return;
+                System.out.println(e.getButton());
+                if(e.getButton() == 1) {
+                    listener.selectNode(entry.getValue());
+                    return;
+                }else if(e.getButton() == 3){
+                    ga.getGraph().removeNode(entry.getValue());
+                    getTopLevelAncestor().repaint();
+                    return;
+                }
             }
         }
         listener.selectNode(-1);

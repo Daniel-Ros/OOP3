@@ -13,10 +13,10 @@ public class Ex2 {
      * @param json_file - a json file (e.g., G1.json - G3.gson)
      * @return
      */
-    public static DirectedWeightedGraph getGrapg(String json_file) {
-        DirectedWeightedGraph ans = null;
-
-        return ans;
+    public static DirectedWeightedGraph getGraph(String json_file) {
+        DirectedWeightedGraphAlgorithms dwga = new DirectedWeightedGraphAlgorithmsImpl();
+        dwga.load(json_file);
+         return dwga.getGraph();
     }
     /**
      * This static function will be used to test your implementation
