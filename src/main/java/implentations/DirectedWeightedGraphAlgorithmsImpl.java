@@ -143,7 +143,7 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
     /**
      * Finds the NodeData which minimizes the max distance to all the other nodes.
      * Assuming the graph isConnected, elese return null. See: https://en.wikipedia.org/wiki/Graph_center
-     *
+     * TODO: clear the objects after use to reduce memory
      * @return the Node data to which the max shortest path to all the other nodes is minimized.
      */
     @Override
@@ -157,17 +157,17 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
             NodeData n = it.next();
             Dijkstra d = new Dijkstra(n.getKey(),graph);
             dijkstras.add(d);
-            d.start();
+            d.run();
         }
 
-        for (Dijkstra d :
-                dijkstras) {
-            try {
-                d.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+//        for (Dijkstra d :
+//                dijkstras) {
+//            try {
+//                d.join();
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
         int ret = -1;
         double minmax = Double.POSITIVE_INFINITY;
         for (Dijkstra d :
@@ -187,7 +187,7 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
      * the sum of the weights of all the consecutive (pairs) of nodes (directed) is the "cost" of the solution -
      * the lower the better.
      * See: https://en.wikipedia.org/wiki/Travelling_salesman_problem
-     * TODO: implement
+     * TODO: test if  all cities are connected connected
      * @param cities
      */
     @Override

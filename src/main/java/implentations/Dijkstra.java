@@ -4,6 +4,7 @@ import api.DirectedWeightedGraph;
 import api.EdgeData;
 import api.NodeData;
 
+import java.lang.instrument.Instrumentation;
 import java.util.*;
 
 public class Dijkstra extends Thread{
@@ -14,7 +15,6 @@ public class Dijkstra extends Thread{
 
     HashMap<Integer,Integer> p;
     private HashMap<Integer,Double> d;
-
 
     Dijkstra(int src, int dest, DirectedWeightedGraph g){
         this.src = src;
@@ -32,7 +32,7 @@ public class Dijkstra extends Thread{
 
     @Override
     public void run() {
-        while(Runtime.getRuntime().freeMemory() < graph.nodeSize() * 20) {
+        while(Runtime.getRuntime().freeMemory() < graph.nodeSize() * 1000) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -99,6 +99,7 @@ public class Dijkstra extends Thread{
 
         d = dist;
         p = prev;
+
     }
 
     public List<NodeData> getRet() {
@@ -127,6 +128,5 @@ public class Dijkstra extends Thread{
         }
         return ret;
     }
-
 
 }

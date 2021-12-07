@@ -82,7 +82,7 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
      */
     @Override
     public Iterator<NodeData> nodeIter() {
-        return nodes.values().iterator();
+        return new WrapperIterator<>(nodes.values().iterator(),this);
     }
 
     /**
@@ -100,7 +100,7 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
             it.addIt(node.getEdgeIter());
         }
 
-        return it;
+        return new WrapperIterator<>(it,this);
     }
 
     /**
@@ -112,7 +112,7 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
      */
     @Override
     public Iterator<EdgeData> edgeIter(int node_id) {
-        return ((NodeDataImpl)nodes.get(node_id)).getEdgeIter();
+        return new WrapperIterator<EdgeData>(((NodeDataImpl)getNode(node_id)).getEdgeIter(),this);
     }
 
     /**

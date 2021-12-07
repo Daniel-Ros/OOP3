@@ -77,7 +77,8 @@ public class GrapPanel extends JPanel implements MouseListener, MouseWheelListen
                 g.setStroke(new BasicStroke(1));
             }
             drawArrow(g,p1,p2,15F);
-
+            g.drawString(String.valueOf("%.3f").formatted(e.getWeight()),(int)((p2.x() + p1.x())/2),
+                    (int)((p2.y()+p1.y())/2));
         }
     }
 

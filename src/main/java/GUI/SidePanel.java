@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
@@ -35,7 +36,10 @@ public class SidePanel extends JPanel implements ActionListener,NodeSelectedList
     private JLabel selectedNodes;
     private DirectedWeightedGraphAlgorithms ga;
 
-        SidePanel(DirectedWeightedGraphAlgorithms graphAlgorithms){
+    boolean isSelectingTspNodes;
+    List<NodeData> tspNodes;
+
+    SidePanel(DirectedWeightedGraphAlgorithms graphAlgorithms){
 
             ga = graphAlgorithms;
 
