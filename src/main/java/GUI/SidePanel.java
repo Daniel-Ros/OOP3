@@ -81,9 +81,9 @@ public class SidePanel extends JPanel implements ActionListener,NodeSelectedList
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        JPanel srcDestPanel =new JPanel();
-        JPanel destPanel = new JPanel();
-        JPanel weightPanel = new JPanel();
+        JPanel srcDestPanel =new JPanel(new GridLayout(3,2));
+        JPanel destPanel = new JPanel(new GridLayout(2,2));
+        JPanel weightPanel = new JPanel(new GridLayout(2,2));
 
         JTextField srcField=createFilteredTextField(false);
         JTextField destField=createFilteredTextField(false);
@@ -91,19 +91,21 @@ public class SidePanel extends JPanel implements ActionListener,NodeSelectedList
         destField.setColumns(5);
         srcDestPanel.add(new JLabel("Source: "));
         srcDestPanel.add(srcField);
-        srcDestPanel.add(Box.createHorizontalStrut(15));
         srcDestPanel.add(new JLabel("Destination: "));
         srcDestPanel.add(destField);
+        srcDestPanel.add(new JLabel("Natural numbers Only")).setForeground(Color.red);
 
         JTextField destOnlyField=createFilteredTextField(false);
         destPanel.add(new JLabel("Destination: "));
         destOnlyField.setColumns(5);
         destPanel.add(destOnlyField);
+        destPanel.add(new JLabel("Natural numbers Only")).setForeground(Color.red);
 
         JTextField weightField=createFilteredTextField(true);
         weightField.setColumns(10);
         weightPanel.add(new JLabel("Weight: "));
         weightPanel.add(weightField);
+        weightPanel.add(new JLabel("Real numbers Only")).setForeground(Color.red);
 
         if (e.getSource() == isConnected) {
             status.setText("Is connected:" + String.valueOf(ga.isConnected()));
@@ -111,7 +113,7 @@ public class SidePanel extends JPanel implements ActionListener,NodeSelectedList
             if (src == -1 || dest == -1) {
                 if(src==dest){
                     int res = JOptionPane.showConfirmDialog(null, srcDestPanel,
-                            "Please Enter Source and Destination Values", JOptionPane.OK_CANCEL_OPTION);
+                            "Please Enter Source and Destination Values (Natural Numbers only)", JOptionPane.OK_CANCEL_OPTION);
                     if(res==JOptionPane.OK_OPTION){
                         String srcString = srcField.getText();
                         String destString = destField.getText();
@@ -131,7 +133,7 @@ public class SidePanel extends JPanel implements ActionListener,NodeSelectedList
                         return;
                     }
                 }else{
-                    int res = JOptionPane.showConfirmDialog(null,destPanel,"Enter Destination",JOptionPane.OK_CANCEL_OPTION);
+                    int res = JOptionPane.showConfirmDialog(null,destPanel,"Enter Destination (Natural Numbers only)",JOptionPane.OK_CANCEL_OPTION);
                     if(res==JOptionPane.OK_OPTION){
                         String destString = destOnlyField.getText();
                         if(destString.isEmpty()){
@@ -153,7 +155,7 @@ public class SidePanel extends JPanel implements ActionListener,NodeSelectedList
             if (src == -1 || dest == -1) {
                 if(src==dest){
                     int res = JOptionPane.showConfirmDialog(null, srcDestPanel,
-                            "Please Enter Source and Destination Values", JOptionPane.OK_CANCEL_OPTION);
+                            "Please Enter Source and Destination Values (Natural Numbers only)", JOptionPane.OK_CANCEL_OPTION);
                     if(res==JOptionPane.OK_OPTION){
                         String srcString = srcField.getText();
                         String destString = destField.getText();
@@ -173,7 +175,7 @@ public class SidePanel extends JPanel implements ActionListener,NodeSelectedList
                         return;
                     }
                 }else{
-                    int res = JOptionPane.showConfirmDialog(null,destPanel,"Enter Destination",JOptionPane.OK_CANCEL_OPTION);
+                    int res = JOptionPane.showConfirmDialog(null,destPanel,"Enter Destination (Natural Numbers only)",JOptionPane.OK_CANCEL_OPTION);
                     if(res==JOptionPane.OK_OPTION){
                         String destString = destOnlyField.getText();
                         if(destString.isEmpty()){
@@ -190,7 +192,7 @@ public class SidePanel extends JPanel implements ActionListener,NodeSelectedList
                     }
                 }
             }
-            int res=JOptionPane.showConfirmDialog(null,weightPanel,"Enter Weight",JOptionPane.OK_CANCEL_OPTION);
+            int res=JOptionPane.showConfirmDialog(null,weightPanel,"Enter Weight (Real Numbers only)",JOptionPane.OK_CANCEL_OPTION);
             if(res==JOptionPane.OK_OPTION){
                 String weightString=weightField.getText();
                 if(weightString.isEmpty()){
@@ -200,7 +202,7 @@ public class SidePanel extends JPanel implements ActionListener,NodeSelectedList
                     weight=Double.parseDouble(weightString);
                 }
             }
-            ga.getGraph().connect(src, dest, 1);
+            ga.getGraph().connect(src, dest, weight);
             src = -1;
             dest = -1;
             selectedNodes.setText("");
@@ -209,7 +211,7 @@ public class SidePanel extends JPanel implements ActionListener,NodeSelectedList
             if (src == -1 || dest == -1) {
                 if(src==dest){
                     int res = JOptionPane.showConfirmDialog(null, srcDestPanel,
-                            "Please Enter Source and Destination Values", JOptionPane.OK_CANCEL_OPTION);
+                            "Please Enter Source and Destination Values (Natural Numbers only)", JOptionPane.OK_CANCEL_OPTION);
                     if(res==JOptionPane.OK_OPTION){
                         String srcString = srcField.getText();
                         String destString = destField.getText();
@@ -229,7 +231,7 @@ public class SidePanel extends JPanel implements ActionListener,NodeSelectedList
                         return;
                     }
                 }else{
-                    int res = JOptionPane.showConfirmDialog(null,destPanel,"Enter Destination",JOptionPane.OK_CANCEL_OPTION);
+                    int res = JOptionPane.showConfirmDialog(null,destPanel,"Enter Destination (Natural Numbers only)",JOptionPane.OK_CANCEL_OPTION);
                     if(res==JOptionPane.OK_OPTION){
                         String destString = destOnlyField.getText();
                         if(destString.isEmpty()){

@@ -5,6 +5,10 @@ import api.EdgeData;
 import api.NodeData;
 
 import javax.swing.*;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,9 +29,8 @@ public class tspWindow extends JFrame implements ActionListener {
     public tspWindow(DirectedWeightedGraphAlgorithms graphAlgorithms, Container w){
         window = w;
         ga = graphAlgorithms;
-
         label = new JLabel("<html>Enter the cities in this format:<br/>id1,id2,id3..</html>");
-        text = new JTextField();
+        text = createFilteredTextField();
         submit = new JButton("Submit");
         submit.addActionListener(this);
         submit.setMaximumSize(new Dimension(200,80));;
@@ -41,7 +44,36 @@ public class tspWindow extends JFrame implements ActionListener {
         add(submit);
 
     }
+        public JTextField createFilteredTextField(){
+            JTextField field = new JTextField();
+            AbstractDocument doc = (AbstractDocument) field.getDocument();
+            final int maxCharacters = 1000;
+            doc.setDocumentFilter(new DocumentFilter() {
+                public void replace(FilterBypass fb, int offset, int len, String str, AttributeSet a) throws BadLocationException {
+                    String regexType = "((?<!^,)\\d+(,|(\\.(?=\\d+$))(?!$)|$))+";
+                    String text = fb.getDocument().getText(0, fb.getDocument().getLength());
+                    text += str;
+                    if ((fb.getDocument().getLength() + str.length() - len) <= maxCharacters && text.matches(regexType)) {
+                        super.replace(fb, offset, len, str, a);
+                    } else {
+                        Toolkit.getDefaultToolkit().beep();
+                    }
+                }
 
+                public void insertString(FilterBypass fb, int offset, String str, AttributeSet a) throws BadLocationException {
+                    String regexType =  "((?<!^,)\\d+(,|(\\.(?=\\d+$))(?!$)|$))+";
+                    String text = fb.getDocument().getText(0, fb.getDocument().getLength());
+                    text += str;
+                    if ((fb.getDocument().getLength() + str.length()) <= maxCharacters
+                            && text.matches(regexType)) {
+                        super.insertString(fb, offset, str, a);
+                    } else {
+                        Toolkit.getDefaultToolkit().beep();
+                    }
+                }
+            });
+            return field;
+        }
 
     /**
      * Invoked when an action occurs.
