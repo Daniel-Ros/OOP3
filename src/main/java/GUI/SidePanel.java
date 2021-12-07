@@ -19,6 +19,7 @@ import java.util.function.Consumer;
 public class SidePanel extends JPanel implements ActionListener,NodeSelectedListener {
     private int src;
     private int dest;
+    double weight;
 
     private JButton isConnected;
     private JButton shortestPath;
@@ -75,18 +76,109 @@ public class SidePanel extends JPanel implements ActionListener,NodeSelectedList
      */
     @Override
     public void actionPerformed(ActionEvent e) {
+    // text pannel for getting src and destination
+        JTextField srcField= new JTextField(5);
+        JTextField destField= new JTextField(5);
+        JPanel getSrcDest= new JPanel();
+        getSrcDest.add(new JLabel("Source: "));
+        getSrcDest.add(srcField);
+        getSrcDest.add(Box.createHorizontalStrut(15));
+        getSrcDest.add(new JLabel("Destination: "));
+        getSrcDest.add(destField);
+        String sourceStr="";
+        String destStr="";
+        String weightStr="";
+
         if (e.getSource() == isConnected) {
             status.setText("Is connected:" + String.valueOf(ga.isConnected()));
         } else if (e.getSource() == shortestPathDist) {
             if (src == -1 || dest == -1) {
-                return;
+                if(src == dest) {
+                    int res = JOptionPane.showConfirmDialog(null, getSrcDest,
+                            "Please Enter Source and Destination Values", JOptionPane.OK_CANCEL_OPTION);
+                    if (res == JOptionPane.OK_OPTION) {
+                        sourceStr = srcField.getText();
+                        destStr = destField.getText();
+                        if(sourceStr.equals("") || destStr.equals("")){
+                            JOptionPane.showMessageDialog(null,"didnt put values correct");
+                            return;
+                        }
+                        src=Integer.valueOf(sourceStr);
+                        dest=Integer.valueOf(destStr);
+                    }
+                }else{
+                    destStr=JOptionPane.showInputDialog(null,"Enter Destination ('Natural Number')");
+                    if(destStr.equals("")) {
+                        JOptionPane.showMessageDialog(null,"didnt put Destination Value");
+                        return;
+                    }
+                    dest=Integer.valueOf(destStr);
+                }
+                if (ga.getGraph().getNode(src)==null && ga.getGraph().getNode(dest)==null){
+                    JOptionPane.showMessageDialog(null,"Wrong Source and Destination keys\n Try Again");
+                    src=-1;
+                    dest=-1;
+                    return;
+                }
+                else if(ga.getGraph().getNode(src)==null){
+                    JOptionPane.showMessageDialog(null,"Wrong Source key\n Try Again");
+                    src=-1;
+                    return;
+                }else if(ga.getGraph().getNode(dest)==null){
+                    JOptionPane.showMessageDialog(null,"Wrong Destination key\n Try Again");
+                    dest=-1;
+                    return;
+                }
             }
             status.setText("shortest path dist:" + String.valueOf(ga.shortestPathDist(src, dest)));
         } else if (e.getSource() == connect) {
             if (src == -1 || dest == -1) {
+                if(src == dest) {
+                    int res = JOptionPane.showConfirmDialog(null, getSrcDest,
+                            "Please Enter Source and Destination Values", JOptionPane.OK_CANCEL_OPTION);
+                    if (res == JOptionPane.OK_OPTION) {
+                        sourceStr = srcField.getText();
+                        destStr = destField.getText();
+                        if(sourceStr.equals("") || destStr.equals("")){
+                            JOptionPane.showMessageDialog(null,"didnt put values correct");
+                            return;
+                        }
+                        src=Integer.valueOf(sourceStr);
+                        dest=Integer.valueOf(destStr);
+                    }
+                }else{
+                    destStr=JOptionPane.showInputDialog("Enter Destination ('Natural Number')");
+                    if(destStr.equals("")){
+                        JOptionPane.showMessageDialog(null,"didnt put Destination Value");
+                        return;
+                    }
+                    dest=Integer.valueOf(destStr);
+                }
+                if (ga.getGraph().getNode(src)==null && ga.getGraph().getNode(dest)==null){
+                    JOptionPane.showMessageDialog(null,"Wrong Source and Destination keys\n Try Again");
+                    src=-1;
+                    dest=-1;
+                    return;
+                }
+                else if(ga.getGraph().getNode(src)==null){
+                    JOptionPane.showMessageDialog(null,"Wrong Source key\n Try Again");
+                    src=-1;
+                    return;
+                }else if(ga.getGraph().getNode(dest)==null){
+                    JOptionPane.showMessageDialog(null,"Wrong Destination key\n Try Again");
+                    dest=-1;
+                    return;
+                }
+            }
+            weightStr=JOptionPane.showInputDialog("Enter Weight ('Real Number')");
+            if(weightStr==null){
+                JOptionPane.showMessageDialog(null,"Didnt put Weight value");
+                dest=-1;
+                src=-1;
                 return;
             }
-            ga.getGraph().connect(src, dest, 1);
+            weight=Double.parseDouble(weightStr);
+            ga.getGraph().connect(src, dest, weight);
             src = -1;
             dest = -1;
             selectedNodes.setText("");
