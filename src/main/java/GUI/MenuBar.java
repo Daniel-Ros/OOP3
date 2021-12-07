@@ -16,6 +16,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+//TODO: add graph menu (edit node/edge// add node/edge // delete node/edge )
+//TODO: add an about menu
 public class MenuBar extends JMenuBar implements ActionListener {
 
     JMenuItem load;

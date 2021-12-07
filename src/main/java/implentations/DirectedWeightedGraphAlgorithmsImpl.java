@@ -39,7 +39,7 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
 
     /**
      * Computes a deep copy of this weighted graph.
-     *  TODO: implement
+     *  TODO: implement copy
      * @return
      */
     @Override
