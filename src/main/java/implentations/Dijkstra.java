@@ -10,6 +10,9 @@ public class Dijkstra extends Thread{
     private int src,dest;
     private DirectedWeightedGraph graph;
     private List<NodeData> ret;
+
+
+    HashMap<Integer,Integer> p;
     private HashMap<Integer,Double> d;
 
 
@@ -29,6 +32,13 @@ public class Dijkstra extends Thread{
 
     @Override
     public void run() {
+        while(Runtime.getRuntime().freeMemory() < graph.nodeSize() * 20) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         HashMap<Integer,Double> dist = new HashMap<>();
         HashMap<Integer,Integer> prev = new HashMap<>();
         HashSet<Integer> visited = new HashSet<>();
@@ -88,6 +98,7 @@ public class Dijkstra extends Thread{
 
 
         d = dist;
+        p = prev;
     }
 
     public List<NodeData> getRet() {
@@ -96,6 +107,14 @@ public class Dijkstra extends Thread{
 
     public int getSrc() {
         return src;
+    }
+
+    public HashMap<Integer, Double> getDistMap() {
+        return d;
+    }
+
+    public HashMap<Integer, Integer> getPrevMap() {
+        return p;
     }
 
     public double getMaximumDist(){

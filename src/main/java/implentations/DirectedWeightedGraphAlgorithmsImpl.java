@@ -192,7 +192,76 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
      */
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
-        return null;
+        LinkedList<NodeData> remaining = new LinkedList<NodeData>();
+        for (NodeData c :
+                cities) {
+            remaining.add(c);
+        }
+
+        LinkedList<NodeData> ret = new LinkedList<>();
+        ret.add(cities.get(0));
+        while (!remaining.isEmpty()){
+            NodeData city = ret.peekLast();
+            remaining.remove(city);
+            NodeData minDirectRoad = getMinDirectRoad(city,remaining);
+            if(minDirectRoad != null){
+                remaining.remove(minDirectRoad);
+                ret.add(minDirectRoad);
+            }else{
+                List<NodeData> minRoad = getMinRoad(city,remaining);
+                for (NodeData n :
+                        minRoad) {
+                    remaining.remove(n);
+                    ret.add(n);
+                }
+            }
+        }
+        return ret;
+    }
+
+    private List<NodeData> getMinRoad(NodeData city, LinkedList<NodeData> remaining) {
+        Dijkstra d = new Dijkstra(city.getKey(),graph);
+        d.run();
+        HashMap<Integer,Double> distMap = d.getDistMap();
+        HashMap<Integer,Integer> prevMap = d.getPrevMap();
+        int minNode = 0;
+        double minW = Double.POSITIVE_INFINITY;
+        for (NodeData r:remaining) {
+            if(distMap.get(r.getKey()) < minW){
+                minW = distMap.get(r.getKey());
+                minNode = r.getKey();
+            }
+        }
+        List<NodeData> ret = new ArrayList<>();
+        int p = prevMap.get(minNode);
+        while (p != -1) {
+            if (ret.size() == graph.nodeSize()) {
+                ret = null;
+                return ret;
+            } else {
+                ret.add(graph.getNode(p));
+                p = prevMap.get(p);
+            }
+        }
+        Collections.reverse(ret);
+        ret.add(graph.getNode(minNode));
+        ret.remove(0);
+        return ret;
+    }
+
+    private NodeData getMinDirectRoad(NodeData city, LinkedList<NodeData> remaining) {
+        NodeData min = null;
+        double minW = Double.POSITIVE_INFINITY;
+        for (NodeData r: remaining) {
+            EdgeData e = graph.getEdge(city.getKey(),r.getKey());
+            if(e != null){
+                if(e.getWeight() < minW){
+                    minW = e.getWeight();
+                    min = r;
+                }
+            }
+        }
+        return min;
     }
 
     /**
@@ -204,6 +273,8 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
      */
     @Override
     public boolean save(String file) {
+        if(graph == null)
+            return false;
         File output = new File(file);
         JsonObject object = new JsonObject();
         JsonArray edges = new JsonArray();

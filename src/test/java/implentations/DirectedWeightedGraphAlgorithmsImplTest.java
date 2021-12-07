@@ -62,8 +62,8 @@ class DirectedWeightedGraphAlgorithmsImplTest {
     @Test
     void center() {
         assertEquals(dwga.getGraph(),null);
-        dwga.load("data/G1.json");
-        assertEquals(dwga.center(),8);
+        dwga.load("data/10000Nodes.json");
+        assertEquals(dwga.center().getKey(),3846);
     }
 
     @Test
@@ -72,17 +72,14 @@ class DirectedWeightedGraphAlgorithmsImplTest {
 
     @Test
     void save() {
+        assertTrue(!dwga.save("data/ONLY_To_TEST.json"));
+        assertTrue(dwga.load("data/G1.json"));
+        assertTrue(dwga.save("data/ONLY_To_TEST.json"));
+        assertTrue(dwga.load("data/ONLY_To_TEST.json"));
     }
 
     @Test
     void load() {
-    }
-
-    @Test
-    void getMin() {
-    }
-
-    @Test
-    void getMax() {
+        assertTrue(dwga.load("data/G1.json"));
     }
 }
