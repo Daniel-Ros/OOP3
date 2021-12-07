@@ -1,12 +1,20 @@
 package GUI;
 
 import api.DirectedWeightedGraphAlgorithms;
+import api.EdgeData;
+import api.NodeData;
 
 import javax.swing.*;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class MenuBar extends JMenuBar implements ActionListener {
 
@@ -15,6 +23,10 @@ public class MenuBar extends JMenuBar implements ActionListener {
     JMenuItem exit;
     JMenuItem tsp;
     JSeparator sep;
+    JMenuItem shortestPathDist;
+    JMenuItem shortestPath;
+    JMenuItem connect;
+    JMenuItem isConnected;
 
     DirectedWeightedGraphAlgorithms ga;
 
@@ -30,12 +42,20 @@ public class MenuBar extends JMenuBar implements ActionListener {
         exit = new JMenuItem("exit");
 
         tsp = new JMenuItem("tsp");
-
+        shortestPathDist = new JMenuItem("ShortestPathDist");
+        shortestPath = new JMenuItem("ShortestPath");
+        connect = new JMenuItem("Connect");
+        isConnected = new JMenuItem("Is Connected");
 
         load.addActionListener(this);
         save.addActionListener(this);
         exit.addActionListener(this);
         tsp.addActionListener(this);
+        shortestPathDist.addActionListener(this);
+        shortestPath.addActionListener(this);
+        connect.addActionListener(this);
+        isConnected .addActionListener(this);
+
 
         file.add(load);
         file.add(save);
@@ -43,6 +63,10 @@ public class MenuBar extends JMenuBar implements ActionListener {
         file.add(exit);
 
         algo.add(tsp);
+        algo.add(shortestPathDist);
+        algo.add(shortestPath);
+        algo.add(connect);
+        algo.add(isConnected);
 
         add(file);
         add(algo);
@@ -55,30 +79,176 @@ public class MenuBar extends JMenuBar implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == exit){
+        if (e.getSource() == exit) {
             System.exit(0);
-        }else if(e.getSource() == load){
+        } else if (e.getSource() == load) {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
             fileChooser.showOpenDialog(null);
-            if(ga.load(fileChooser.getSelectedFile().getPath())){
+            if (ga.load(fileChooser.getSelectedFile().getPath())) {
                 System.out.println("loaded");
                 getTopLevelAncestor().repaint();
             }
-        }else if(e.getSource() == save){
+        } else if (e.getSource() == save) {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
             fileChooser.showOpenDialog(null);
-            if(ga.save(fileChooser.getSelectedFile().getPath())){
+            if (ga.save(fileChooser.getSelectedFile().getPath())) {
                 System.out.println("saved");
                 getTopLevelAncestor().repaint();
             }
-        }
-        else if(e.getSource() == tsp){
-            tspWindow window = new tspWindow(ga,getTopLevelAncestor());
-            window.setSize(300,100);
+        } else if (e.getSource() == tsp) {
+            tspWindow window = new tspWindow(ga, getTopLevelAncestor());
+            window.setSize(300, 100);
             window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             window.setVisible(true);
+        } else if (e.getSource() == isConnected) {
+            boolean connection = ga.isConnected();
+            String message = Boolean.toString(connection);
+            JOptionPane.showMessageDialog(null, message);
+        } else if (e.getSource() == connect || e.getSource() == shortestPath || e.getSource() == shortestPathDist) {
+            int src = -1;
+            int dest = -1;
+            double weight=1;
+            JPanel srcDestPanel = new JPanel(new GridLayout(3, 2));
+            JPanel destPanel = new JPanel(new GridLayout(2, 2));
+            JPanel weightPanel = new JPanel(new GridLayout(2, 2));
+
+            JTextField srcField = createFilteredTextField(false);
+            JTextField destField = createFilteredTextField(false);
+            srcField.setColumns(5);
+            destField.setColumns(5);
+            srcDestPanel.add(new JLabel("Source: "));
+            srcDestPanel.add(srcField);
+            srcDestPanel.add(new JLabel("Destination: "));
+            srcDestPanel.add(destField);
+            srcDestPanel.add(new JLabel("Natural numbers Only")).setForeground(Color.red);
+
+            JTextField destOnlyField = createFilteredTextField(false);
+            destPanel.add(new JLabel("Destination: "));
+            destOnlyField.setColumns(5);
+            destPanel.add(destOnlyField);
+            destPanel.add(new JLabel("Natural numbers Only")).setForeground(Color.red);
+
+            JTextField weightField = createFilteredTextField(true);
+            weightField.setColumns(10);
+            weightPanel.add(new JLabel("Weight: "));
+            weightPanel.add(weightField);
+            weightPanel.add(new JLabel("Real numbers Only")).setForeground(Color.red);
+
+            if (e.getSource() == connect) {
+                int res = JOptionPane.showConfirmDialog(null, srcDestPanel,
+                        "Please Enter Source and Destination Values (Natural Numbers only)", JOptionPane.OK_CANCEL_OPTION);
+                if (res == JOptionPane.OK_OPTION) {
+                    String srcString = srcField.getText();
+                    String destString = destField.getText();
+                    if (srcString.isEmpty() || destString.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Empty Text Field");
+                        return;
+                    }
+                    src = Integer.parseInt(srcField.getText());
+                    dest = Integer.parseInt(destField.getText());
+                    if (ga.getGraph().getNode(src) == null || ga.getGraph().getNode(dest) == null) {
+                        JOptionPane.showMessageDialog(null, "Invalid Vertex key");
+                    }
+                }
+                res=JOptionPane.showConfirmDialog(null,weightPanel,"Enter Weight (Real Numbers only)",JOptionPane.OK_CANCEL_OPTION);
+                if(res==JOptionPane.OK_OPTION){
+                    String weightString=weightField.getText();
+                    if(weightString.isEmpty()){
+                        JOptionPane.showMessageDialog(null,"Didnt put any value generating automatic value of '1'");
+                    }else{
+                        weight=Double.parseDouble(weightString);
+                    }
+                }
+                ga.getGraph().connect(src, dest, weight);
+                getTopLevelAncestor().repaint();
+            }else if(e.getSource()==shortestPath) {
+                int res = JOptionPane.showConfirmDialog(null, srcDestPanel,
+                        "Please Enter Source and Destination Values (Natural Numbers only)", JOptionPane.OK_CANCEL_OPTION);
+                if (res == JOptionPane.OK_OPTION) {
+                    String srcString = srcField.getText();
+                    String destString = destField.getText();
+                    if (srcString.isEmpty() || destString.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Empty Text Field");
+                        return;
+                    }
+                    src = Integer.parseInt(srcField.getText());
+                    dest = Integer.parseInt(destField.getText());
+                    if (ga.getGraph().getNode(src) == null || ga.getGraph().getNode(dest) == null) {
+                        JOptionPane.showMessageDialog(null, "Invalid Vertex key");
+                        return;
+                    }
+                }
+                List<NodeData> nodes = ga.shortestPath(src, dest);
+                if (nodes == null)
+                    return ;
+                nodes.get(0).setTag(Color.red.getRGB());
+                for (int i = 1; i < nodes.size(); i++) {
+                    nodes.get(i).setTag(Color.red.getRGB());
+                    EdgeData edge = ga.getGraph().getEdge(nodes.get(i - 1).getKey(), nodes.get(i).getKey());
+                    edge.setTag(Color.red.getRGB());
+                }
+                getTopLevelAncestor().repaint();
+            }else{
+                int res = JOptionPane.showConfirmDialog(null, srcDestPanel,
+                        "Please Enter Source and Destination Values (Natural Numbers only)", JOptionPane.OK_CANCEL_OPTION);
+                if (res == JOptionPane.OK_OPTION) {
+                    String srcString = srcField.getText();
+                    String destString = destField.getText();
+                    if (srcString.isEmpty() || destString.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Empty Text Field");
+                        return;
+                    }
+                    src = Integer.parseInt(srcField.getText());
+                    dest = Integer.parseInt(destField.getText());
+                    if (ga.getGraph().getNode(src) == null || ga.getGraph().getNode(dest) == null) {
+                        JOptionPane.showMessageDialog(null, "Invalid Vertex key");
+                        return;
+                    }
+                }
+                String shortestDistAnswer="<html>shortest path dist: <br/>" + String.valueOf(ga.shortestPathDist(src, dest))+" </html>";
+                JOptionPane.showMessageDialog(null,shortestDistAnswer);
+            }
         }
+    }
+    private JTextField createFilteredTextField(boolean flag){
+        JTextField field =new JTextField();
+        AbstractDocument doc =(AbstractDocument) field.getDocument();
+        final int maxCharacters =1000;
+        doc.setDocumentFilter(new DocumentFilter(){
+            public void replace(FilterBypass fb, int offset, int len, String str, AttributeSet a) throws BadLocationException {
+                String regexType;
+                if(flag){
+                    regexType="^[1]?[0-9]{1,9999999}([.][0-9]{0,7})?$";
+                }else{
+                    regexType="^[1]?[0-9]{1,9999999}$";
+                }
+                String text= fb.getDocument().getText(0,fb.getDocument().getLength());
+                text+=str;
+                if((fb.getDocument().getLength()+str.length()-len)<=maxCharacters  && text.matches(regexType)){
+                    super.replace(fb, offset, len, str, a);
+                }else{
+                    Toolkit.getDefaultToolkit().beep();
+                }
+            }
+            public void insertString(FilterBypass fb,int offset,String str,AttributeSet a) throws BadLocationException {
+                String regexType;
+                if(flag){
+                    regexType="^[1]?[0-9]{1,9999999}([.][0-9]{0,7})?$";
+                }else{
+                    regexType="^[1]?[0-9]{1,9999999}$";
+                }
+                String text=fb.getDocument().getText(0,fb.getDocument().getLength());
+                text += str;
+                if ((fb.getDocument().getLength() + str.length()) <= maxCharacters
+                        && text.matches(regexType)) {
+                    super.insertString(fb, offset, str, a);
+                }else{
+                    Toolkit.getDefaultToolkit().beep();
+                }
+            }
+        });
+        return field;
     }
 }

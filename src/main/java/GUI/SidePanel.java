@@ -87,7 +87,6 @@ public class SidePanel extends JPanel implements ActionListener,NodeSelectedList
         destField.setColumns(5);
         srcDestPanel.add(new JLabel("Source: "));
         srcDestPanel.add(srcField);
-//        srcDestPanel.add(Box.createHorizontalStrut(15));
         srcDestPanel.add(new JLabel("Destination: "));
         srcDestPanel.add(destField);
         srcDestPanel.add(new JLabel("Natural numbers Only")).setForeground(Color.red);
@@ -199,7 +198,7 @@ public class SidePanel extends JPanel implements ActionListener,NodeSelectedList
                     weight=Double.parseDouble(weightString);
                 }
             }
-            ga.getGraph().connect(src, dest, 1);
+            ga.getGraph().connect(src, dest, weight);
             src = -1;
             dest = -1;
             selectedNodes.setText("");
