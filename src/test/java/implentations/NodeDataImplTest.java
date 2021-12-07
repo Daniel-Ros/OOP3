@@ -1,7 +1,10 @@
 package implentations;
 
+import api.EdgeData;
 import api.GeoLocation;
 import api.NodeData;
+
+import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -92,29 +95,81 @@ class NodeDataImplTest {
 
     @org.junit.jupiter.api.Test
     void addEdgeTo() {
+        NodeDataImpl n1 = new NodeDataImpl(1,new GeoLocationImpl(0D,0D,0D));
+        n1.addEdgeTo(new EdgeDataImpl(1,10,1));
+        Iterator<EdgeData> it = n1.getEdgeIter();
+        assertEquals(it.hasNext(),true);
+        EdgeData e = it.next();
+        assertEquals(e.getDest(),10);
+        assertEquals(e.getWeight(),1);
+        assertEquals(it.hasNext(),false);
     }
 
     @org.junit.jupiter.api.Test
     void addEdgeFrom() {
+        NodeDataImpl n1 = new NodeDataImpl(1,new GeoLocationImpl(0D,0D,0D));
+        n1.addEdgeFrom(new EdgeDataImpl(1,10,1));
+        Iterator<EdgeData> it = n1.getTransposedEdgeIter();
+        assertEquals(it.hasNext(),true);
+        EdgeData e = it.next();
+        assertEquals(e.getDest(),10);
+        assertEquals(e.getWeight(),1);
+        assertEquals(it.hasNext(),false);
     }
 
     @org.junit.jupiter.api.Test
     void removeEdgeTo() {
+        NodeDataImpl n1 = new NodeDataImpl(1,new GeoLocationImpl(0D,0D,0D));
+        EdgeData e = new EdgeDataImpl(1,10,1);
+        n1.addEdgeTo(e);
+        n1.removeEdgeTo(e);
+        Iterator<EdgeData> it = n1.getEdgeIter();
+        assertEquals(it.hasNext(),false);
     }
 
     @org.junit.jupiter.api.Test
     void removeEdgeFrom() {
+        NodeDataImpl n1 = new NodeDataImpl(1,new GeoLocationImpl(0D,0D,0D));
+        EdgeData e = new EdgeDataImpl(1,10,1);
+        n1.addEdgeFrom(e);
+        n1.removeEdgeFrom(e);
+        Iterator<EdgeData> it = n1.getTransposedEdgeIter();
+        assertEquals(it.hasNext(),false);
     }
+
 
     @org.junit.jupiter.api.Test
     void getEdgeByDest() {
+        NodeDataImpl n1 = new NodeDataImpl(1,new GeoLocationImpl(0D,0D,0D));
+        EdgeData e10 = new EdgeDataImpl(1,10,1);
+        EdgeData e15 = new EdgeDataImpl(1,15,1);
+        n1.addEdgeTo(e10);
+        n1.addEdgeTo(e15);
+        EdgeData e = n1.getEdgeByDest(15);
+        assertEquals(e,e15);
     }
 
     @org.junit.jupiter.api.Test
     void getEdgeIter() {
+        NodeDataImpl n1 = new NodeDataImpl(1,new GeoLocationImpl(0D,0D,0D));
+        n1.addEdgeTo(new EdgeDataImpl(1,10,1));
+        Iterator<EdgeData> it = n1.getEdgeIter();
+        assertEquals(it.hasNext(),true);
+        EdgeData e = it.next();
+        assertEquals(e.getDest(),10);
+        assertEquals(e.getWeight(),1);
+        assertEquals(it.hasNext(),false);
     }
 
     @org.junit.jupiter.api.Test
     void getTransposedEdgeIter() {
+        NodeDataImpl n1 = new NodeDataImpl(1,new GeoLocationImpl(0D,0D,0D));
+        n1.addEdgeFrom(new EdgeDataImpl(1,10,1));
+        Iterator<EdgeData> it = n1.getTransposedEdgeIter();
+        assertEquals(it.hasNext(),true);
+        EdgeData e = it.next();
+        assertEquals(e.getDest(),10);
+        assertEquals(e.getWeight(),1);
+        assertEquals(it.hasNext(),false);
     }
 }

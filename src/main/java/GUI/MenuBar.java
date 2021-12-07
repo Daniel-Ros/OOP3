@@ -57,6 +57,14 @@ public class MenuBar extends JMenuBar implements ActionListener {
                 System.out.println("loaded");
                 getTopLevelAncestor().repaint();
             }
+        }else if(e.getSource() == save){
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+            fileChooser.showOpenDialog(null);
+            if(ga.save(fileChooser.getSelectedFile().getPath())){
+                System.out.println("saved");
+                getTopLevelAncestor().repaint();
+            }
         }
     }
 }

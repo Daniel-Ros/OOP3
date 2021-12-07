@@ -19,7 +19,7 @@ public class NodeDataImpl implements NodeData {
 
     public NodeDataImpl(int id, GeoLocation geoLocation) {
         this.id = id;
-        this.tag = Color.black.getRGB();
+        this.tag = 0;
         this.geoLocation = geoLocation;
         this.info = "";
         this.toEdges = new HashMap<>();
@@ -91,11 +91,11 @@ public class NodeDataImpl implements NodeData {
     }
 
     public void removeEdgeTo(EdgeData e){
-        toEdges.remove(e);
+        toEdges.remove(e.getDest());
     }
 
     public void removeEdgeFrom(EdgeData e){
-        toEdges.remove(e);
+        fromEdges.remove(e.getSrc());
     }
 
     public EdgeData getEdgeByDest(int dest){

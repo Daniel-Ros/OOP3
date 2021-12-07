@@ -4,14 +4,17 @@ import api.DirectedWeightedGraph;
 import api.EdgeData;
 import api.NodeData;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
 public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
     HashMap<Integer, NodeData> nodes;
+    int mc;
 
     DirectedWeightedGraphImpl(){
         this.nodes = new HashMap<>();
+        mc = 0;
     }
 
     private int numOfEdges = 0;
@@ -48,6 +51,7 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
     @Override
     public void addNode(NodeData n) {
         nodes.put(n.getKey() , n);
+        mc++;
     }
 
     /**
@@ -66,6 +70,7 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
         EdgeDataImpl e = new EdgeDataImpl(src,dest,w);
         ((NodeDataImpl)nodes.get(src)).addEdgeTo(e);
         ((NodeDataImpl)nodes.get(dest)).addEdgeFrom(e);
+        mc++;
     }
 
     /**
@@ -120,6 +125,22 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
      */
     @Override
     public NodeData removeNode(int key) {
+        mc++;
+        Iterator<EdgeData> it = ((NodeDataImpl)getNode(key)).getEdgeIter();
+        ArrayList<EdgeData> deleteEdges = new ArrayList<>();
+        while (it.hasNext()){
+            deleteEdges.add(it.next());
+        }
+        it = ((NodeDataImpl)getNode(key)).getTransposedEdgeIter();
+        while (it.hasNext()){
+            deleteEdges.add(it.next());
+        }
+        for (EdgeData e: deleteEdges){
+            removeEdge(e.getSrc(),e.getDest());
+        }
+
+        nodes.remove(key);
+
         return null;
     }
 
@@ -134,11 +155,13 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
     @Override
     public EdgeData removeEdge(int src, int dest) {
         EdgeData e = getEdge(src, dest);
-        if(e == null)
+        if(e == null) {
             return null;
+        }
+        mc++;
         numOfEdges--;
-        ((NodeDataImpl)nodes.get(src)).removeEdgeFrom(e);
-        ((NodeDataImpl)nodes.get(dest)).removeEdgeTo(e);
+        ((NodeDataImpl)nodes.get(src)).removeEdgeTo(e);
+        ((NodeDataImpl)nodes.get(dest)).removeEdgeFrom(e);
         return e;
     }
 
@@ -171,6 +194,6 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
      */
     @Override
     public int getMC() {
-        return 0;
+        return mc;
     }
 }
