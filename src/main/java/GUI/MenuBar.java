@@ -27,6 +27,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
     JMenuItem shortestPath;
     JMenuItem connect;
     JMenuItem isConnected;
+    JMenuItem center;
 
     DirectedWeightedGraphAlgorithms ga;
 
@@ -46,6 +47,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
         shortestPath = new JMenuItem("ShortestPath");
         connect = new JMenuItem("Connect");
         isConnected = new JMenuItem("Is Connected");
+        center = new JMenuItem("Center");
 
         load.addActionListener(this);
         save.addActionListener(this);
@@ -54,7 +56,8 @@ public class MenuBar extends JMenuBar implements ActionListener {
         shortestPathDist.addActionListener(this);
         shortestPath.addActionListener(this);
         connect.addActionListener(this);
-        isConnected .addActionListener(this);
+        isConnected.addActionListener(this);
+        center.addActionListener(this);
 
 
         file.add(load);
@@ -67,6 +70,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
         algo.add(shortestPath);
         algo.add(connect);
         algo.add(isConnected);
+        algo.add(center);
 
         add(file);
         add(algo);
@@ -209,6 +213,14 @@ public class MenuBar extends JMenuBar implements ActionListener {
                 }
                 String shortestDistAnswer="<html>shortest path dist: <br/>" + String.valueOf(ga.shortestPathDist(src, dest))+" </html>";
                 JOptionPane.showMessageDialog(null,shortestDistAnswer);
+            }
+        }else if(e.getSource()==center){
+            NodeData n = ga.center();
+            if(n != null){
+                n.setTag(Color.red.getRGB());
+                String cen="<html>Center is:<br/>" + n.getKey()+" </html>";
+                JOptionPane.showMessageDialog(null,cen);
+                getTopLevelAncestor().repaint();
             }
         }
     }
