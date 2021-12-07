@@ -12,7 +12,7 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
     HashMap<Integer, NodeData> nodes;
     int mc;
 
-    DirectedWeightedGraphImpl(){
+    public DirectedWeightedGraphImpl(){
         this.nodes = new HashMap<>();
         mc = 0;
     }

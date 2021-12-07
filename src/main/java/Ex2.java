@@ -2,6 +2,7 @@ import GUI.Window;
 import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
 import implentations.DirectedWeightedGraphAlgorithmsImpl;
+import implentations.DirectedWeightedGraphImpl;
 
 //TODO:make a readme
 /**
@@ -27,7 +28,9 @@ public class Ex2 {
         DirectedWeightedGraphAlgorithms ans = null;
 
         ans = new DirectedWeightedGraphAlgorithmsImpl();
-        ans.load(json_file);
+        if(!ans.load(json_file)){
+            ans.init(new DirectedWeightedGraphImpl());
+        }
 
         return ans;
     }
@@ -43,6 +46,6 @@ public class Ex2 {
 
     public static void main(String[] args) {
         long heapsize = Runtime.getRuntime().totalMemory();
-        runGUI("data/G1.json");
+        runGUI("data/G.json");
     }
 }

@@ -175,7 +175,9 @@ public class GrapPanel extends JPanel implements MouseListener, MouseWheelListen
         long time = date.getTime();
         if(time - lastClicked < 200){
             GeoLocation p = getScreenCord2Point(e.getX(),e.getY());
-            NodeData n = new NodeDataImpl((int)(Math.random()*10000),0,p,"");
+            int key = (int)(Math.random()*10000);
+            while(ga.getGraph().getNode(key) != null)key = (int)(Math.random()*10000);
+            NodeData n = new NodeDataImpl(key,0,p,"");
             ga.getGraph().addNode(n);
             repaint();
         }

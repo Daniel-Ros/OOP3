@@ -367,6 +367,8 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
             init(g);
             return true;
         }catch (FileNotFoundException fnfe){
+            min = new GeoLocationImpl(0,0,0);
+            max = new GeoLocationImpl(1,1,0);
             return false;
         }
     }
