@@ -352,7 +352,6 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
                     maxy  = posy;
 
                 NodeData node = new NodeDataImpl(id,0,new GeoLocationImpl(posx,posy,posz),"");
-                node.setInfo(String.valueOf(id));
                 g.addNode(node);
             }
 

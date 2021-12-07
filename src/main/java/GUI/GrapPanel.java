@@ -60,7 +60,7 @@ public class GrapPanel extends JPanel implements MouseListener, MouseWheelListen
             circles.put(c,n.getKey());
             g.setPaint(new Color(n.getTag()));
             g.draw(c);
-            g.drawString(n.getInfo(),(int)posInScreen.x() - 15 ,(int)posInScreen.y() - 15);
+            g.drawString(String.valueOf(n.getKey()),(int)posInScreen.x() - 15 ,(int)posInScreen.y() - 15);
         }
 
         Iterator<EdgeData> itEdges = graph.edgeIter();
@@ -146,9 +146,19 @@ public class GrapPanel extends JPanel implements MouseListener, MouseWheelListen
         for (Map.Entry<Shape, Integer> entry :
                 circles.entrySet()) {
             if (entry.getKey().contains(e.getPoint())) {
-                System.out.println(e.getButton());
                 if(e.getButton() == 1) {
+                    Date date = new Date();
+                    long time = date.getTime();
+                    System.out.println(time - lastClicked);
+                    if(time - lastClicked < 200) {
+                        System.out.println("double cliled on node " + entry.getValue());
+                        NodeWindow nw = new NodeWindow(ga.getGraph().getNode(entry.getValue()));
+                        nw.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                        nw.setSize(350,200);
+                        nw.setVisible(true);
+                    }
                     listener.selectNode(entry.getValue());
+                    lastClicked = time;
                     return;
                 }else if(e.getButton() == 3){
                     ga.getGraph().removeNode(entry.getValue());

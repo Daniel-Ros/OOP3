@@ -10,6 +10,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -20,6 +22,8 @@ public class SidePanel extends JPanel implements ActionListener,NodeSelectedList
     private int src;
     private int dest;
     double weight;
+    boolean isSelectingTspNodes;
+    List<NodeData> tspNodes;
 
     private JButton isConnected;
     private JButton shortestPath;
@@ -66,6 +70,21 @@ public class SidePanel extends JPanel implements ActionListener,NodeSelectedList
             this.add(selectedNodes);
             this.add(status);
 
+            setMaximumSize(new Dimension(80,800));
+            status.setMaximumSize(new Dimension(80,800));
+
+            addComponentListener(new ComponentAdapter() {
+                /**
+                 * Invoked when the component's size changes.
+                 *
+                 * @param e
+                 */
+                @Override
+                public void componentResized(ComponentEvent e) {
+                    setSize(Math.min(getPreferredSize().width, getWidth()),
+                            Math.min(getPreferredSize().height, getHeight()));
+                }
+            });
         }
 
 
@@ -206,24 +225,29 @@ public class SidePanel extends JPanel implements ActionListener,NodeSelectedList
                 getTopLevelAncestor().repaint();
             }
         }else if (e.getSource() == tsp) {
-            List<NodeData> q = new ArrayList<NodeData>(Arrays.asList(ga.getGraph().getNode(10),
-                            ga.getGraph().getNode(3),
-                            ga.getGraph().getNode(12)));
-            List<NodeData> r = ga.tsp(q);
-            if (r == null)
-                return ;
-            r.get(0).setTag(Color.red.getRGB());
-            for (int i = 1; i < r.size(); i++) {
-                r.get(i).setTag(Color.red.getRGB());
-                EdgeData edge = ga.getGraph().getEdge(r.get(i - 1).getKey(), r.get(i).getKey());
-                edge.setTag(Color.red.getRGB());
+            if(!isSelectingTspNodes){
+                status.setText("<html>Click on the wanted nodes<br/>When done, Click on the tsp button again</html>");
+                tspNodes = new ArrayList<>();
+                isSelectingTspNodes = true;
+            }else {
+                List<NodeData> r = ga.tsp(tspNodes);
+                if (r == null)
+                    return;
+                r.get(0).setTag(Color.red.getRGB());
+                for (int i = 1; i < r.size(); i++) {
+                    r.get(i).setTag(Color.red.getRGB());
+                    EdgeData edge = ga.getGraph().getEdge(r.get(i - 1).getKey(), r.get(i).getKey());
+                    edge.setTag(Color.red.getRGB());
+                }
+                getTopLevelAncestor().repaint();
+                isSelectingTspNodes = false;
             }
-            getTopLevelAncestor().repaint();
         }
     }
 
     @Override
     public void selectNode(int node) {
+        status.setText("");
         Iterator<NodeData> it = ga.getGraph().nodeIter();
         it.forEachRemaining(new Consumer<NodeData>() {
             @Override
@@ -240,7 +264,14 @@ public class SidePanel extends JPanel implements ActionListener,NodeSelectedList
         });
 
         getTopLevelAncestor().repaint();
-
+        if(isSelectingTspNodes){
+            if(node != -1){
+                tspNodes.add(ga.getGraph().getNode(node));
+                ga.getGraph().getNode(node).setTag(Color.red.getRGB());
+                getTopLevelAncestor().repaint();
+            }
+            return;
+        }
         if(node == -1){
             src = -1;
             dest = -1;
