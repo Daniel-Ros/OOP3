@@ -151,51 +151,28 @@ public class MenuBar extends JMenuBar implements ActionListener {
             int src = -1;
             int dest = -1;
             double weight=1;
-            JPanel srcDestPanel = new JPanel(new GridLayout(3, 2));
-            JPanel destPanel = new JPanel(new GridLayout(2, 2));
-            JPanel weightPanel = new JPanel(new GridLayout(2, 2));
-
-            JTextField srcField = createFilteredTextField(false);
-            JTextField destField = createFilteredTextField(false);
-            srcField.setColumns(5);
-            destField.setColumns(5);
-            srcDestPanel.add(new JLabel("Source: "));
-            srcDestPanel.add(srcField);
-            srcDestPanel.add(new JLabel("Destination: "));
-            srcDestPanel.add(destField);
-            srcDestPanel.add(new JLabel("Natural numbers Only")).setForeground(Color.red);
-
-            JTextField destOnlyField = createFilteredTextField(false);
-            destPanel.add(new JLabel("Destination: "));
-            destOnlyField.setColumns(5);
-            destPanel.add(destOnlyField);
-            destPanel.add(new JLabel("Natural numbers Only")).setForeground(Color.red);
-
-            JTextField weightField = createFilteredTextField(true);
-            weightField.setColumns(10);
-            weightPanel.add(new JLabel("Weight: "));
-            weightPanel.add(weightField);
-            weightPanel.add(new JLabel("Real numbers Only")).setForeground(Color.red);
+            SrcDestWindow srcDestPanel = new SrcDestWindow();
+            WeightWindow weightPanel = new WeightWindow();
 
             if (e.getSource() == connect) {
                 int res = JOptionPane.showConfirmDialog(null, srcDestPanel,
                         "Please Enter Source and Destination Values (Natural Numbers only)", JOptionPane.OK_CANCEL_OPTION);
                 if (res == JOptionPane.OK_OPTION) {
-                    String srcString = srcField.getText();
-                    String destString = destField.getText();
+                    String srcString = srcDestPanel.srcInput.getText();
+                    String destString = srcDestPanel.destInput.getText();
                     if (srcString.isEmpty() || destString.isEmpty()) {
                         JOptionPane.showMessageDialog(null, "Empty Text Field");
                         return;
                     }
-                    src = Integer.parseInt(srcField.getText());
-                    dest = Integer.parseInt(destField.getText());
+                    src = Integer.parseInt(srcDestPanel.srcInput.getText());
+                    dest = Integer.parseInt(srcDestPanel.destInput.getText());
                     if (ga.getGraph().getNode(src) == null || ga.getGraph().getNode(dest) == null) {
                         JOptionPane.showMessageDialog(null, "Invalid Vertex key");
                     }
                 }
                 res=JOptionPane.showConfirmDialog(null,weightPanel,"Enter Weight (Real Numbers only)",JOptionPane.OK_CANCEL_OPTION);
                 if(res==JOptionPane.OK_OPTION){
-                    String weightString=weightField.getText();
+                    String weightString=weightPanel.weightInput.getText();
                     if(weightString.isEmpty()){
                         JOptionPane.showMessageDialog(null,"Didnt put any value generating automatic value of '1'");
                     }else{
@@ -208,14 +185,14 @@ public class MenuBar extends JMenuBar implements ActionListener {
                 int res = JOptionPane.showConfirmDialog(null, srcDestPanel,
                         "Please Enter Source and Destination Values (Natural Numbers only)", JOptionPane.OK_CANCEL_OPTION);
                 if (res == JOptionPane.OK_OPTION) {
-                    String srcString = srcField.getText();
-                    String destString = destField.getText();
+                    String srcString = srcDestPanel.srcInput.getText();
+                    String destString = srcDestPanel.destInput.getText();
                     if (srcString.isEmpty() || destString.isEmpty()) {
                         JOptionPane.showMessageDialog(null, "Empty Text Field");
                         return;
                     }
-                    src = Integer.parseInt(srcField.getText());
-                    dest = Integer.parseInt(destField.getText());
+                    src = Integer.parseInt(srcDestPanel.srcInput.getText());
+                    dest = Integer.parseInt(srcDestPanel.destInput.getText());
                     if (ga.getGraph().getNode(src) == null || ga.getGraph().getNode(dest) == null) {
                         JOptionPane.showMessageDialog(null, "Invalid Vertex key");
                         return;
@@ -235,14 +212,14 @@ public class MenuBar extends JMenuBar implements ActionListener {
                 int res = JOptionPane.showConfirmDialog(null, srcDestPanel,
                         "Please Enter Source and Destination Values (Natural Numbers only)", JOptionPane.OK_CANCEL_OPTION);
                 if (res == JOptionPane.OK_OPTION) {
-                    String srcString = srcField.getText();
-                    String destString = destField.getText();
+                    String srcString = srcDestPanel.srcInput.getText();
+                    String destString = srcDestPanel.destInput.getText();
                     if (srcString.isEmpty() || destString.isEmpty()) {
                         JOptionPane.showMessageDialog(null, "Empty Text Field");
                         return;
                     }
-                    src = Integer.parseInt(srcField.getText());
-                    dest = Integer.parseInt(destField.getText());
+                    src = Integer.parseInt(srcDestPanel.srcInput.getText());
+                    dest = Integer.parseInt(srcDestPanel.destInput.getText());
                     if (ga.getGraph().getNode(src) == null || ga.getGraph().getNode(dest) == null) {
                         JOptionPane.showMessageDialog(null, "Invalid Vertex key");
                         return;
@@ -260,19 +237,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
                 getTopLevelAncestor().repaint();
             }
         }else if(e.getSource()==addVertex){
-            JPanel keyLocationPanel = new JPanel(new GridLayout(3, 2));
-            JTextField inputKey = createFilteredTextField(false);
-            JTextField inputX =createFilteredTextField(true);
-            JTextField inputY =createFilteredTextField(true);
-            inputX.setColumns(5);
-            inputY.setColumns(5);
-            inputKey.setColumns(5);
-            keyLocationPanel.add(new JLabel("Key: "));
-            keyLocationPanel.add(inputKey);
-            keyLocationPanel.add(new JLabel("x: "));
-            keyLocationPanel.add(inputX);
-            keyLocationPanel.add(new JLabel("y: "));
-            keyLocationPanel.add(inputY);
+            KeyLocationWindow keyLocationPanel = new KeyLocationWindow();
             int k=-1;
             double xI=-1;
             double yI=-1;
@@ -280,9 +245,9 @@ public class MenuBar extends JMenuBar implements ActionListener {
             int res = JOptionPane.showConfirmDialog(null, keyLocationPanel,
                     "Add Vertex", JOptionPane.OK_CANCEL_OPTION);
             if(res==JOptionPane.OK_OPTION){
-                k=Integer.parseInt(inputKey.getText());
-                xI=Double.parseDouble(inputX.getText());
-                yI=Double.parseDouble(inputY.getText());
+                k=Integer.parseInt(keyLocationPanel.keyInput.getText());
+                xI=Double.parseDouble(keyLocationPanel.xInput.getText());
+                yI=Double.parseDouble(keyLocationPanel.yInput.getText());
                 GeoLocationImpl xy= new GeoLocationImpl(xI,yI,0);
                 NodeDataImpl temp= new NodeDataImpl(k,xy);
                 ga.getGraph().addNode(temp);
@@ -290,16 +255,12 @@ public class MenuBar extends JMenuBar implements ActionListener {
                 ////needs to fix geo location to screen size
             }
         }else if(e.getSource()==deleteVertex){
-            JPanel keyPanel = new JPanel(new GridLayout(2,2));
-            JTextField inputKey = createFilteredTextField(false);
-            inputKey.setColumns(5);
-            keyPanel.add(new JLabel("Key: "));
-            keyPanel.add(inputKey);
+            KeyWindow keyPanel = new KeyWindow();
             int key=-1;
             int res = JOptionPane.showConfirmDialog(null, keyPanel,
                     "Choose key to delete", JOptionPane.OK_CANCEL_OPTION);
             if (res== JOptionPane.OK_OPTION){
-                key=Integer.parseInt(inputKey.getText());
+                key=Integer.parseInt(keyPanel.keyInput.getText());
                 if(ga.getGraph().getNode(key)!=null){
                     ga.getGraph().removeNode(key);
                 }else{
@@ -308,25 +269,15 @@ public class MenuBar extends JMenuBar implements ActionListener {
             }
             getTopLevelAncestor().repaint();
         }else if(e.getSource()==addEdge){
-            JPanel getSrcDestWeightPanel = new JPanel(new GridLayout(3,2));
-            JTextField inputSrc = createFilteredTextField(false);
-            JTextField inputDest = createFilteredTextField(false);
-            JTextField inputWeight = createFilteredTextField(true);
-            inputSrc.setColumns(5);
-            inputDest.setColumns(5);
-            inputWeight.setColumns(5);
-            getSrcDestWeightPanel.add(new JLabel("Edge Source: "));
-            getSrcDestWeightPanel.add(inputSrc);
-            getSrcDestWeightPanel.add(new JLabel("Edge Destination: "));
-            getSrcDestWeightPanel.add(inputDest);
-            getSrcDestWeightPanel.add(new JLabel("Edge Weight: "));
-            getSrcDestWeightPanel.add(inputWeight);
+            SrcDestWindow getSrcDestWeightPanel = new SrcDestWindow();
+            WeightWindow weightPanel = new WeightWindow();
             int res = JOptionPane.showConfirmDialog(null, getSrcDestWeightPanel,
                     "Add Edge", JOptionPane.OK_CANCEL_OPTION);
             if (res== JOptionPane.OK_OPTION){
-                int src= Integer.parseInt(inputSrc.getText());
-                int dest= Integer.parseInt(inputDest.getText());
-                double weight= Double.parseDouble(inputWeight.getText());
+                int src= Integer.parseInt(getSrcDestWeightPanel.srcInput.getText());
+                int dest= Integer.parseInt(getSrcDestWeightPanel.destInput.getText());
+                JOptionPane.showConfirmDialog(null,weightPanel,"Weight",JOptionPane.OK_OPTION);
+                double weight= Double.parseDouble(weightPanel.weightInput.getText());
                 if(weight>0 && ga.getGraph().getNode(src)!=null && ga.getGraph().getNode(dest)!=null){
                     ga.getGraph().connect(src,dest,weight);
                 }else{
@@ -335,153 +286,107 @@ public class MenuBar extends JMenuBar implements ActionListener {
             }
             getTopLevelAncestor().repaint();
 
-        }else if(e.getSource()==deleteEdge){
-            JPanel getSrcDestPanel = new JPanel(new GridLayout(3,2));
-            JTextField inputSrc = createFilteredTextField(false);
-            JTextField inputDest = createFilteredTextField(false);
-            inputSrc.setColumns(5);
-            inputDest.setColumns(5);
-            getSrcDestPanel.add(new JLabel("Edge Source: "));
-            getSrcDestPanel.add(inputSrc);
-            getSrcDestPanel.add(new JLabel("Edge Destination: "));
-            getSrcDestPanel.add(inputDest);
-            int res = JOptionPane.showConfirmDialog(null, getSrcDestPanel,
-                    "Choose key to delete", JOptionPane.OK_CANCEL_OPTION);
-            if (res== JOptionPane.OK_OPTION){
-                int src= Integer.parseInt(inputSrc.getText());
-                int dest= Integer.parseInt(inputDest.getText());
-                if(ga.getGraph().getEdge(src,dest)!=null && ga.getGraph().getNode(src)!=null && ga.getGraph().getNode(dest)!=null){
-                    ga.getGraph().removeEdge(src,dest);
-                }else{
-                    JOptionPane.showMessageDialog(null,"Wrong Input");
-                }
-            }
-            getTopLevelAncestor().repaint();
-        }else if(e.getSource()==editEdge){
-            JPanel getSrcDestWeightPanel = new JPanel(new GridLayout(5,2));
-            JCheckBox editWeightCheckBox = new JCheckBox("Keep Weight: ");
-            JTextField inputSrc = createFilteredTextField(false);
-            JTextField inputDest = createFilteredTextField(false);
-            JTextField inputSrcNew = createFilteredTextField(false);
-            JTextField inputDestNew = createFilteredTextField(false);
-            JTextField inputWeight = createFilteredTextField(true);
-            inputSrc.setColumns(5);
-            inputDest.setColumns(5);
-            inputWeight.setColumns(5);
-            getSrcDestWeightPanel.add(new JLabel("Edge Source: "));
-            getSrcDestWeightPanel.add(inputSrc);
-            getSrcDestWeightPanel.add(new JLabel("Edge Destination: "));
-            getSrcDestWeightPanel.add(inputDest);
-            getSrcDestWeightPanel.add(new JLabel("New Edge Source: "));
-            getSrcDestWeightPanel.add(inputSrcNew);
-            getSrcDestWeightPanel.add(new JLabel("New Edge Destination: "));
-            getSrcDestWeightPanel.add(inputDestNew);
-            getSrcDestWeightPanel.add(editWeightCheckBox);
-            int res = JOptionPane.showConfirmDialog(null, getSrcDestWeightPanel,
-                    "Edit Edge", JOptionPane.OK_CANCEL_OPTION);
-            if (res== JOptionPane.OK_OPTION){
-                int src= Integer.parseInt(inputSrc.getText());
-                int dest= Integer.parseInt(inputDest.getText());
-                boolean keepWeight= editWeightCheckBox.isSelected();
-                double weight=1;
-                if(ga.getGraph().getNode(src)!=null && ga.getGraph().getNode(dest)!=null && ga.getGraph().getEdge(src,dest)!=null){
-                    weight=ga.getGraph().getEdge(src,dest).getWeight();
-                    if(!keepWeight){
-                        JPanel getNewWeight = new JPanel(new GridLayout(1,2));
-                        getNewWeight.add(new JLabel("New Weight :"));
-                        getNewWeight.add(inputWeight);
-                        int resW = JOptionPane.showConfirmDialog(null, getNewWeight,
-                                "New Weight", JOptionPane.OK_CANCEL_OPTION);
-                        if(!inputWeight.getText().isEmpty() && resW==JOptionPane.OK_OPTION) {
-                            weight = Double.parseDouble(inputWeight.getText());
-                        }else{
-                            JOptionPane.showMessageDialog(null,"Didnt give any value keeping old weight");
-                        }
-                    }
-                    ga.getGraph().removeEdge(src,dest);
-                    int newSrc= Integer.parseInt(inputSrcNew.getText());
-                    int newDest= Integer.parseInt(inputDestNew.getText());
-                    ga.getGraph().connect(newSrc,newDest,weight);
-                }else{
-                    JOptionPane.showMessageDialog(null,"Wrong Input");
-                }
-            }
-            getTopLevelAncestor().repaint();
-        }else if(e.getSource()==editVertex){
-            JPanel editVertexLocation= new JPanel(new GridLayout(2,2));
-            JTextField inputX = createFilteredTextField(true);
-            JTextField inputY = createFilteredTextField(true);
-            inputX.setColumns(5);
-            inputY.setColumns(5);
-            editVertexLocation.add(new JLabel("set X: "));
-            editVertexLocation.add(inputX);
-            editVertexLocation.add(new JLabel("set Y: "));
-            editVertexLocation.add(inputY);
-
-            JPanel chooseKey= new JPanel(new GridLayout(1,2));
-            JTextField inputKey= createFilteredTextField(false);
-            inputKey.setColumns(5);
-            chooseKey.add(new JLabel("Key: "));
-            chooseKey.add(inputKey);
-
-            int res= JOptionPane.showConfirmDialog(null, chooseKey,
-                    "Key", JOptionPane.OK_CANCEL_OPTION);
-            if (res==JOptionPane.OK_OPTION){
-                int key=Integer.parseInt(inputKey.getText());
-                if(ga.getGraph().getNode(key)!=null){
-                    NodeData temp=ga.getGraph().getNode(key);
-                    int resXY= JOptionPane.showConfirmDialog(null, editVertexLocation,
-                            "Choose Location", JOptionPane.OK_CANCEL_OPTION);
-                    if(resXY==JOptionPane.OK_OPTION){
-                        double x=Double.parseDouble(inputX.getText());
-                        double y=Double.parseDouble(inputY.getText());
-                        GeoLocationImpl xyNew= new GeoLocationImpl(x,y,0);
-                        temp.setLocation(xyNew);
-                    }
-                }else{
-                    JOptionPane.showMessageDialog(null,"Wrong Input");
-                }
-            }
-            getTopLevelAncestor().repaint();
+//        }else if(e.getSource()==deleteEdge){
+//            JPanel getSrcDestPanel = new JPanel(new GridLayout(3,2));
+//            inputSrc.setColumns(5);
+//            inputDest.setColumns(5);
+//            getSrcDestPanel.add(new JLabel("Edge Source: "));
+//            getSrcDestPanel.add(inputSrc);
+//            getSrcDestPanel.add(new JLabel("Edge Destination: "));
+//            getSrcDestPanel.add(inputDest);
+//            int res = JOptionPane.showConfirmDialog(null, getSrcDestPanel,
+//                    "Choose key to delete", JOptionPane.OK_CANCEL_OPTION);
+//            if (res== JOptionPane.OK_OPTION){
+//                int src= Integer.parseInt(inputSrc.getText());
+//                int dest= Integer.parseInt(inputDest.getText());
+//                if(ga.getGraph().getEdge(src,dest)!=null && ga.getGraph().getNode(src)!=null && ga.getGraph().getNode(dest)!=null){
+//                    ga.getGraph().removeEdge(src,dest);
+//                }else{
+//                    JOptionPane.showMessageDialog(null,"Wrong Input");
+//                }
+//            }
+//            getTopLevelAncestor().repaint();
+//        }else if(e.getSource()==editEdge){
+//            JPanel getSrcDestWeightPanel = new JPanel(new GridLayout(5,2));
+//            JCheckBox editWeightCheckBox = new JCheckBox("Keep Weight: ");
+//            inputSrc.setColumns(5);
+//            inputDest.setColumns(5);
+//            inputWeight.setColumns(5);
+//            getSrcDestWeightPanel.add(new JLabel("Edge Source: "));
+//            getSrcDestWeightPanel.add(inputSrc);
+//            getSrcDestWeightPanel.add(new JLabel("Edge Destination: "));
+//            getSrcDestWeightPanel.add(inputDest);
+//            getSrcDestWeightPanel.add(new JLabel("New Edge Source: "));
+//            getSrcDestWeightPanel.add(inputSrcNew);
+//            getSrcDestWeightPanel.add(new JLabel("New Edge Destination: "));
+//            getSrcDestWeightPanel.add(inputDestNew);
+//            getSrcDestWeightPanel.add(editWeightCheckBox);
+//            int res = JOptionPane.showConfirmDialog(null, getSrcDestWeightPanel,
+//                    "Edit Edge", JOptionPane.OK_CANCEL_OPTION);
+//            if (res== JOptionPane.OK_OPTION){
+//                int src= Integer.parseInt(inputSrc.getText());
+//                int dest= Integer.parseInt(inputDest.getText());
+//                boolean keepWeight= editWeightCheckBox.isSelected();
+//                double weight=1;
+//                if(ga.getGraph().getNode(src)!=null && ga.getGraph().getNode(dest)!=null && ga.getGraph().getEdge(src,dest)!=null){
+//                    weight=ga.getGraph().getEdge(src,dest).getWeight();
+//                    if(!keepWeight){
+//                        JPanel getNewWeight = new JPanel(new GridLayout(1,2));
+//                        getNewWeight.add(new JLabel("New Weight :"));
+//                        getNewWeight.add(inputWeight);
+//                        int resW = JOptionPane.showConfirmDialog(null, getNewWeight,
+//                                "New Weight", JOptionPane.OK_CANCEL_OPTION);
+//                        if(!inputWeight.getText().isEmpty() && resW==JOptionPane.OK_OPTION) {
+//                            weight = Double.parseDouble(inputWeight.getText());
+//                        }else{
+//                            JOptionPane.showMessageDialog(null,"Didnt give any value keeping old weight");
+//                        }
+//                    }
+//                    ga.getGraph().removeEdge(src,dest);
+//                    int newSrc= Integer.parseInt(inputSrcNew.getText());
+//                    int newDest= Integer.parseInt(inputDestNew.getText());
+//                    ga.getGraph().connect(newSrc,newDest,weight);
+//                }else{
+//                    JOptionPane.showMessageDialog(null,"Wrong Input");
+//                }
+//            }
+//            getTopLevelAncestor().repaint();
+//        }else if(e.getSource()==editVertex){
+//            JPanel editVertexLocation= new JPanel(new GridLayout(2,2));
+//            JTextField inputX = createFilteredTextField(true);
+//            JTextField inputY = createFilteredTextField(true);
+//            inputX.setColumns(5);
+//            inputY.setColumns(5);
+//            editVertexLocation.add(new JLabel("set X: "));
+//            editVertexLocation.add(inputX);
+//            editVertexLocation.add(new JLabel("set Y: "));
+//            editVertexLocation.add(inputY);
+//
+//            JPanel chooseKey= new JPanel(new GridLayout(1,2));
+//            JTextField inputKey= createFilteredTextField(false);
+//            inputKey.setColumns(5);
+//            chooseKey.add(new JLabel("Key: "));
+//            chooseKey.add(inputKey);
+//
+//            int res= JOptionPane.showConfirmDialog(null, chooseKey,
+//                    "Key", JOptionPane.OK_CANCEL_OPTION);
+//            if (res==JOptionPane.OK_OPTION){
+//                int key=Integer.parseInt(inputKey.getText());
+//                if(ga.getGraph().getNode(key)!=null){
+//                    NodeData temp=ga.getGraph().getNode(key);
+//                    int resXY= JOptionPane.showConfirmDialog(null, editVertexLocation,
+//                            "Choose Location", JOptionPane.OK_CANCEL_OPTION);
+//                    if(resXY==JOptionPane.OK_OPTION){
+//                        double x=Double.parseDouble(inputX.getText());
+//                        double y=Double.parseDouble(inputY.getText());
+//                        GeoLocationImpl xyNew= new GeoLocationImpl(x,y,0);
+//                        temp.setLocation(xyNew);
+//                    }
+//                }else{
+//                    JOptionPane.showMessageDialog(null,"Wrong Input");
+//                }
+//            }
+//            getTopLevelAncestor().repaint();
         }
-    }
-    private JTextField createFilteredTextField(boolean flag){
-        JTextField field =new JTextField();
-        AbstractDocument doc =(AbstractDocument) field.getDocument();
-        final int maxCharacters =1000;
-        doc.setDocumentFilter(new DocumentFilter(){
-            public void replace(FilterBypass fb, int offset, int len, String str, AttributeSet a) throws BadLocationException {
-                String regexType;
-                if(flag){
-                    regexType="^[1]?[0-9]{1,9999999}([.][0-9]{0,7})?$";
-                }else{
-                    regexType="^[1]?[0-9]{1,9999999}$";
-                }
-                String text= fb.getDocument().getText(0,fb.getDocument().getLength());
-                text+=str;
-                if((fb.getDocument().getLength()+str.length()-len)<=maxCharacters  && text.matches(regexType)){
-                    super.replace(fb, offset, len, str, a);
-                }else{
-                    Toolkit.getDefaultToolkit().beep();
-                }
-            }
-            public void insertString(FilterBypass fb,int offset,String str,AttributeSet a) throws BadLocationException {
-                String regexType;
-                if(flag){
-                    regexType="^[1]?[0-9]{1,9999999}([.][0-9]{0,7})?$";
-                }else{
-                    regexType="^[1]?[0-9]{1,9999999}$";
-                }
-                String text=fb.getDocument().getText(0,fb.getDocument().getLength());
-                text += str;
-                if ((fb.getDocument().getLength() + str.length()) <= maxCharacters
-                        && text.matches(regexType)) {
-                    super.insertString(fb, offset, str, a);
-                }else{
-                    Toolkit.getDefaultToolkit().beep();
-                }
-            }
-        });
-        return field;
     }
 }

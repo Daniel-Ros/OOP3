@@ -7,23 +7,21 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 import java.awt.*;
 
-public class WeightWindow extends JPanel{
-    JTextField weightInput;
-    JLabel weightLabel;
+public class KeyWindow extends JPanel {
+    JLabel keyLabel;
+    JTextField keyInput;
     JLabel restriction;
-
-    public WeightWindow(){
+    public KeyWindow(){
         super.setLayout(new GridLayout(2,2));
-        weightLabel= new JLabel("Weight: ");
-        restriction= new JLabel("Real Numbers");
+        keyLabel= new JLabel("Key: ");
+        restriction= new JLabel("Natural Numbers");
         restriction.setForeground(Color.red);
-        weightInput=createFilteredTextField();
-        weightInput.setColumns(5);
-        super.add(weightLabel);
-        super.add(weightInput);
+        keyInput=createFilteredTextField();
+        keyInput.setColumns(5);
+        super.add(keyLabel);
+        super.add(keyInput);
         super.add(restriction);
     }
-
 
     private JTextField createFilteredTextField(){
         JTextField field =new JTextField();
@@ -32,7 +30,7 @@ public class WeightWindow extends JPanel{
         doc.setDocumentFilter(new DocumentFilter(){
             public void replace(FilterBypass fb, int offset, int len, String str, AttributeSet a) throws BadLocationException {
                 String regexType;
-                regexType="^[1]?[0-9]{1,9999999}([.][0-9]{0,7})?$";
+                regexType="^[1]?[0-9]{1,9999999}$";
                 String text= fb.getDocument().getText(0,fb.getDocument().getLength());
                 text+=str;
                 if((fb.getDocument().getLength()+str.length()-len)<=maxCharacters  && text.matches(regexType)){
@@ -43,7 +41,7 @@ public class WeightWindow extends JPanel{
             }
             public void insertString(FilterBypass fb,int offset,String str,AttributeSet a) throws BadLocationException {
                 String regexType;
-                regexType="^[1]?[0-9]{1,9999999}([.][0-9]{0,7})?$";
+                regexType="^[1]?[0-9]{1,9999999}$";
                 String text=fb.getDocument().getText(0,fb.getDocument().getLength());
                 text += str;
                 if ((fb.getDocument().getLength() + str.length()) <= maxCharacters
