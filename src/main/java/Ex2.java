@@ -45,7 +45,11 @@ public class Ex2 {
     }
 
     public static void main(String[] args) {
-        long heapsize = Runtime.getRuntime().totalMemory();
-        runGUI("data/G.json");
+        if(args.length >= 1){
+            runGUI(args[0]);
+        }else{
+            runGUI("");
+        }
+
     }
 }

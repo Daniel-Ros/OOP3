@@ -1,9 +1,12 @@
 package implentations;
 
+import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
 import api.NodeData;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,7 +31,11 @@ class DirectedWeightedGraphAlgorithmsImplTest {
 
     @Test
     void copy() {
-        //TODO: create a copy
+        assertEquals(dwga.getGraph(),null);
+        dwga.load("data/G1.json");
+        DirectedWeightedGraph g1 = dwga.copy();
+        g1.removeNode(1);
+        assertNotNull(dwga.getGraph().getNode(1));
     }
 
     @Test
@@ -68,6 +75,10 @@ class DirectedWeightedGraphAlgorithmsImplTest {
 
     @Test
     void tsp() {
+        dwga.load("data/G1.json");
+        assertNull(dwga.tsp(null));
+        assertNull(dwga.tsp(new ArrayList<>()));
+        assertNotNull(new ArrayList<NodeData>(Arrays.asList(dwga.getGraph().getNode(1),dwga.getGraph().getNode(10))));;
     }
 
     @Test

@@ -6,9 +6,11 @@ import com.google.gson.*;
 import com.google.gson.stream.JsonWriter;
 
 import javax.naming.ldap.HasControls;
+import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.List;
 
 
 public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
@@ -39,12 +41,28 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
 
     /**
      * Computes a deep copy of this weighted graph.
-     *  TODO: implement copy
-     * @return
+     * * @return  a new DirectedWeighedGtaph equals to ours.
      */
     @Override
     public DirectedWeightedGraph copy() {
-        return null;
+        DirectedWeightedGraph g = new DirectedWeightedGraphImpl();
+        Iterator<NodeData> nit = graph.nodeIter();
+        while (nit.hasNext()){
+            NodeData n = nit.next();
+            NodeData newNode = new NodeDataImpl(n.getKey(),n.getTag(),new GeoLocationImpl(
+                    n.getLocation().x(),
+                    n.getLocation().y(),
+                    n.getLocation().z()
+            ),
+                    n.getInfo());
+            g.addNode(newNode);
+        }
+        Iterator<EdgeData> eit = graph.edgeIter();
+        while(eit.hasNext()){
+            EdgeData e = eit.next();
+            g.connect(e.getSrc(),e.getDest(),e.getWeight());
+        }
+        return g;
     }
 
     /**
@@ -143,7 +161,7 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
     /**
      * Finds the NodeData which minimizes the max distance to all the other nodes.
      * Assuming the graph isConnected, elese return null. See: https://en.wikipedia.org/wiki/Graph_center
-     * TODO: clear the objects after use to reduce memory
+
      * @return the Node data to which the max shortest path to all the other nodes is minimized.
      */
     @Override
@@ -153,13 +171,13 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
 
 
         ArrayList<DijkstraPool> pool = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 20; i++) {
             pool.add(new DijkstraPool(graph));
         }
         Iterator<NodeData> it = graph.nodeIter();
         int i = 0;
         while (it.hasNext()){
-            pool.get(i%pool.size()).add(it.next());
+            pool.get(i++%pool.size()).add(it.next());
         }
 
         for (DijkstraPool p : pool){
@@ -191,15 +209,23 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
      * the sum of the weights of all the consecutive (pairs) of nodes (directed) is the "cost" of the solution -
      * the lower the better.
      * See: https://en.wikipedia.org/wiki/Travelling_salesman_problem
-     * TODO: test if  all cities are connected connected
      * @param cities
      */
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
+        if(cities == null || cities.isEmpty()) return null;
         LinkedList<NodeData> remaining = new LinkedList<NodeData>();
         for (NodeData c :
                 cities) {
             remaining.add(c);
+        }
+
+        Dijkstra dijkstra = new Dijkstra(cities.get(0).getKey(),graph);
+        dijkstra.run();
+        HashMap<Integer,Double> distMap = dijkstra.getDistMap();
+
+        for (NodeData n : cities){
+            if(distMap.get(n.getKey()) == Double.POSITIVE_INFINITY) return null;
         }
 
         LinkedList<NodeData> ret = new LinkedList<>();
@@ -309,7 +335,9 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
 
         Gson g = new GsonBuilder().setPrettyPrinting().create();
         try {
-            Files.writeString(output.toPath(), g.toJson(object));
+            FileWriter myWriter = new FileWriter(output);
+            myWriter.write(g.toJson(object));
+            myWriter.close();
         } catch (IOException e) {
            return false;
         }
