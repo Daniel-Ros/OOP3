@@ -151,33 +151,37 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
         if(this.isConnected() == false)
             return null;
 
-        ArrayList<Dijkstra> dijkstras = new ArrayList<>();
+
+        ArrayList<DijkstraPool> pool = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            pool.add(new DijkstraPool(graph));
+        }
         Iterator<NodeData> it = graph.nodeIter();
+        int i = 0;
         while (it.hasNext()){
-            NodeData n = it.next();
-            Dijkstra d = new Dijkstra(n.getKey(),graph);
-            dijkstras.add(d);
-            d.run();
+            pool.get(i%pool.size()).add(it.next());
         }
 
-//        for (Dijkstra d :
-//                dijkstras) {
-//            try {
-//                d.join();
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
+        for (DijkstraPool p : pool){
+            p.start();
+        }
+
+        for (DijkstraPool p : pool){
+            try {
+                p.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
         int ret = -1;
         double minmax = Double.POSITIVE_INFINITY;
-        for (Dijkstra d :
-                dijkstras) {
-            double m = d.getMaximumDist();
-            if(m < minmax){
-                minmax = m;
-                ret = d.getSrc();
-            }
-
+        for (DijkstraPool p : pool) {
+                double m = p.getMinMaxWeight();
+                if(m < minmax){
+                    minmax = m;
+                    ret = p.getMinMaxNodeKey();
+                }
         }
         return graph.getNode(ret);
     }

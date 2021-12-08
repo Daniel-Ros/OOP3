@@ -129,4 +129,11 @@ public class Dijkstra extends Thread{
         return ret;
     }
 
+
+    public void clear(){
+        this.graph = null;
+        this.d = null;
+        this.p = null;
+        this.ret = null;
+    }
 }

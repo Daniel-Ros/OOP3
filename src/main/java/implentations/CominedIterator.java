@@ -6,7 +6,6 @@ import api.EdgeData;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-// TODO: add a coumter on the mc to throw exception
 public class CominedIterator<T> implements Iterator<T> {
     ArrayList<Iterator<T>> its;
     int current;

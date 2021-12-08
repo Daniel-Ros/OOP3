@@ -277,6 +277,7 @@ public class SidePanel extends JPanel implements ActionListener,NodeSelectedList
                 isSelectingTspNodes = true;
             }else {
                 List<NodeData> r = ga.tsp(tspNodes);
+                String stations = "" + r.get(0).getKey();
                 if (r == null)
                     return;
                 r.get(0).setTag(Color.red.getRGB());
@@ -284,7 +285,9 @@ public class SidePanel extends JPanel implements ActionListener,NodeSelectedList
                     r.get(i).setTag(Color.red.getRGB());
                     EdgeData edge = ga.getGraph().getEdge(r.get(i - 1).getKey(), r.get(i).getKey());
                     edge.setTag(Color.red.getRGB());
+                    stations += "->" + r.get(i).getKey();
                 }
+                status.setText(stations);
                 getTopLevelAncestor().repaint();
                 isSelectingTspNodes = false;
             }
