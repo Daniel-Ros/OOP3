@@ -298,14 +298,42 @@ public class MenuBar extends JMenuBar implements ActionListener {
             }
             getTopLevelAncestor().repaint();
         }else if(e.getSource()==addEdge){
+            JPanel getSrcDestWeightPanel = new JPanel(new GridLayout(3,2));
+            JTextField inputSrc = createFilteredTextField(false);
+            JTextField inputDest = createFilteredTextField(false);
+            JTextField inputWeight = createFilteredTextField(true);
+            inputSrc.setColumns(5);
+            inputDest.setColumns(5);
+            inputWeight.setColumns(5);
+            getSrcDestWeightPanel.add(new JLabel("Edge Source: "));
+            getSrcDestWeightPanel.add(inputSrc);
+            getSrcDestWeightPanel.add(new JLabel("Edge Destination: "));
+            getSrcDestWeightPanel.add(inputDest);
+            getSrcDestWeightPanel.add(new JLabel("Edge Weight: "));
+            getSrcDestWeightPanel.add(inputWeight);
+            int res = JOptionPane.showConfirmDialog(null, getSrcDestWeightPanel,
+                    "Add Edge", JOptionPane.OK_CANCEL_OPTION);
+            if (res== JOptionPane.OK_OPTION){
+                int src= Integer.parseInt(inputSrc.getText());
+                int dest= Integer.parseInt(inputDest.getText());
+                double weight= Double.parseDouble(inputWeight.getText());
+                if(weight>0 && ga.getGraph().getNode(src)!=null && ga.getGraph().getNode(dest)!=null){
+                    ga.getGraph().connect(src,dest,weight);
+                }else{
+                    JOptionPane.showMessageDialog(null,"Wrong Input");
+                }
+            }
+            getTopLevelAncestor().repaint();
 
         }else if(e.getSource()==deleteEdge){
             JPanel getSrcDestPanel = new JPanel(new GridLayout(3,2));
             JTextField inputSrc = createFilteredTextField(false);
             JTextField inputDest = createFilteredTextField(false);
-            getSrcDestPanel.add(new JLabel("Edge Source"));
+            inputSrc.setColumns(5);
+            inputDest.setColumns(5);
+            getSrcDestPanel.add(new JLabel("Edge Source: "));
             getSrcDestPanel.add(inputSrc);
-            getSrcDestPanel.add(new JLabel("Edge Destination"));
+            getSrcDestPanel.add(new JLabel("Edge Destination: "));
             getSrcDestPanel.add(inputDest);
             int res = JOptionPane.showConfirmDialog(null, getSrcDestPanel,
                     "Choose key to delete", JOptionPane.OK_CANCEL_OPTION);
