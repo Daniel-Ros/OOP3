@@ -280,11 +280,45 @@ public class MenuBar extends JMenuBar implements ActionListener {
                 ////needs to fix geo location to screen size
             }
         }else if(e.getSource()==deleteVertex){
-
+            JPanel keyPanel = new JPanel(new GridLayout(2,2));
+            JTextField inputKey = createFilteredTextField(false);
+            inputKey.setColumns(5);
+            keyPanel.add(new JLabel("Key: "));
+            keyPanel.add(inputKey);
+            int key=-1;
+            int res = JOptionPane.showConfirmDialog(null, keyPanel,
+                    "Choose key to delete", JOptionPane.OK_CANCEL_OPTION);
+            if (res== JOptionPane.OK_OPTION){
+                key=Integer.parseInt(inputKey.getText());
+                if(ga.getGraph().getNode(key)!=null){
+                    ga.getGraph().removeNode(key);
+                }else{
+                    JOptionPane.showMessageDialog(null,"Wrong Input");
+                }
+            }
+            getTopLevelAncestor().repaint();
         }else if(e.getSource()==addEdge){
 
         }else if(e.getSource()==deleteEdge){
-
+            JPanel getSrcDestPanel = new JPanel(new GridLayout(3,2));
+            JTextField inputSrc = createFilteredTextField(false);
+            JTextField inputDest = createFilteredTextField(false);
+            getSrcDestPanel.add(new JLabel("Edge Source"));
+            getSrcDestPanel.add(inputSrc);
+            getSrcDestPanel.add(new JLabel("Edge Destination"));
+            getSrcDestPanel.add(inputDest);
+            int res = JOptionPane.showConfirmDialog(null, getSrcDestPanel,
+                    "Choose key to delete", JOptionPane.OK_CANCEL_OPTION);
+            if (res== JOptionPane.OK_OPTION){
+                int src= Integer.parseInt(inputSrc.getText());
+                int dest= Integer.parseInt(inputDest.getText());
+                if(ga.getGraph().getEdge(src,dest)!=null && ga.getGraph().getNode(src)!=null && ga.getGraph().getNode(dest)!=null){
+                    ga.getGraph().removeEdge(src,dest);
+                }else{
+                    JOptionPane.showMessageDialog(null,"Wrong Input");
+                }
+            }
+            getTopLevelAncestor().repaint();
         }
     }
     private JTextField createFilteredTextField(boolean flag){
