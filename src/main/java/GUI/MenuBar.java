@@ -3,6 +3,8 @@ package GUI;
 import api.DirectedWeightedGraphAlgorithms;
 import api.EdgeData;
 import api.NodeData;
+import implentations.GeoLocationImpl;
+import implentations.NodeDataImpl;
 
 import javax.swing.*;
 import javax.swing.text.AbstractDocument;
@@ -30,6 +32,10 @@ public class MenuBar extends JMenuBar implements ActionListener {
     JMenuItem connect;
     JMenuItem isConnected;
     JMenuItem center;
+    JMenuItem addVertex;
+    JMenuItem deleteVertex;
+    JMenuItem addEdge;
+    JMenuItem deleteEdge;
 
     DirectedWeightedGraphAlgorithms ga;
 
@@ -38,12 +44,19 @@ public class MenuBar extends JMenuBar implements ActionListener {
         ga = graphAlgorithms;
         JMenu file = new JMenu("file");
         JMenu algo = new JMenu("algo");
+        JMenu graph = new JMenu("graph");
+        JMenu edges = new JMenu("Edges");
+        JMenu vertex = new JMenu("Vertex");
 
         load = new JMenuItem("load");
         save = new JMenuItem("save");
         sep = new JSeparator();
         exit = new JMenuItem("exit");
 
+        addVertex = new JMenuItem("Add");
+        deleteVertex = new JMenuItem("Delete");
+        addEdge = new JMenuItem("Add");
+        deleteEdge = new JMenuItem("Delete");
         tsp = new JMenuItem("tsp");
         shortestPathDist = new JMenuItem("ShortestPathDist");
         shortestPath = new JMenuItem("ShortestPath");
@@ -51,6 +64,10 @@ public class MenuBar extends JMenuBar implements ActionListener {
         isConnected = new JMenuItem("Is Connected");
         center = new JMenuItem("Center");
 
+        addVertex.addActionListener(this);
+        deleteVertex.addActionListener(this);
+        addEdge.addActionListener(this);
+        deleteEdge.addActionListener(this);
         load.addActionListener(this);
         save.addActionListener(this);
         exit.addActionListener(this);
@@ -60,7 +77,6 @@ public class MenuBar extends JMenuBar implements ActionListener {
         connect.addActionListener(this);
         isConnected.addActionListener(this);
         center.addActionListener(this);
-
 
         file.add(load);
         file.add(save);
@@ -74,8 +90,17 @@ public class MenuBar extends JMenuBar implements ActionListener {
         algo.add(isConnected);
         algo.add(center);
 
+        vertex.add(addVertex);
+        vertex.add(deleteVertex);
+        edges.add(addEdge);
+        edges.add(deleteEdge);
+
+        graph.add(vertex);
+        graph.add(edges);
+
         add(file);
         add(algo);
+        add(graph);
     }
 
     /**
@@ -224,6 +249,42 @@ public class MenuBar extends JMenuBar implements ActionListener {
                 JOptionPane.showMessageDialog(null,cen);
                 getTopLevelAncestor().repaint();
             }
+        }else if(e.getSource()==addVertex){
+            JPanel keyLocationPanel = new JPanel(new GridLayout(3, 2));
+            JTextField inputKey = createFilteredTextField(false);
+            JTextField inputX =createFilteredTextField(true);
+            JTextField inputY =createFilteredTextField(true);
+            inputX.setColumns(5);
+            inputY.setColumns(5);
+            inputKey.setColumns(5);
+            keyLocationPanel.add(new JLabel("Key: "));
+            keyLocationPanel.add(inputKey);
+            keyLocationPanel.add(new JLabel("x: "));
+            keyLocationPanel.add(inputX);
+            keyLocationPanel.add(new JLabel("y: "));
+            keyLocationPanel.add(inputY);
+            int k=-1;
+            double xI=-1;
+            double yI=-1;
+
+            int res = JOptionPane.showConfirmDialog(null, keyLocationPanel,
+                    "Add Vertex", JOptionPane.OK_CANCEL_OPTION);
+            if(res==JOptionPane.OK_OPTION){
+                k=Integer.parseInt(inputKey.getText());
+                xI=Double.parseDouble(inputX.getText());
+                yI=Double.parseDouble(inputY.getText());
+                GeoLocationImpl xy= new GeoLocationImpl(xI,yI,0);
+                NodeDataImpl temp= new NodeDataImpl(k,xy);
+                ga.getGraph().addNode(temp);
+                getTopLevelAncestor().repaint();
+                ////needs to fix geo location to screen size
+            }
+        }else if(e.getSource()==deleteVertex){
+
+        }else if(e.getSource()==addEdge){
+
+        }else if(e.getSource()==deleteEdge){
+
         }
     }
     private JTextField createFilteredTextField(boolean flag){
