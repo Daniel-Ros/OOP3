@@ -85,90 +85,50 @@ public class SidePanel extends JPanel implements ActionListener,NodeSelectedList
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        JPanel srcDestPanel =new JPanel(new GridLayout(3,2));
-        JPanel destPanel = new JPanel(new GridLayout(2,2));
-        JPanel weightPanel = new JPanel(new GridLayout(2,2));
-
-        JTextField srcField=createFilteredTextField(false);
-        JTextField destField=createFilteredTextField(false);
-        srcField.setColumns(5);
-        destField.setColumns(5);
-        srcDestPanel.add(new JLabel("Source: "));
-        srcDestPanel.add(srcField);
-        srcDestPanel.add(new JLabel("Destination: "));
-        srcDestPanel.add(destField);
-        srcDestPanel.add(new JLabel("Natural numbers Only")).setForeground(Color.red);
-
-        JTextField destOnlyField=createFilteredTextField(false);
-        destPanel.add(new JLabel("Destination: "));
-        destOnlyField.setColumns(5);
-        destPanel.add(destOnlyField);
-        destPanel.add(new JLabel("Natural numbers Only")).setForeground(Color.red);
-
-        JTextField weightField=createFilteredTextField(true);
-        weightField.setColumns(10);
-        weightPanel.add(new JLabel("Weight: "));
-        weightPanel.add(weightField);
-        weightPanel.add(new JLabel("Real numbers Only")).setForeground(Color.red);
+        SrcDestWindow srcDestWindow=new SrcDestWindow();
+        WeightWindow weightPanel=new WeightWindow();
 
         if (e.getSource() == isConnected) {
             status.setText("Is connected:" + String.valueOf(ga.isConnected()));
         } else if (e.getSource() == shortestPathDist) {
             if (src == -1 || dest == -1) {
                 if(src==dest){
-                    int res = JOptionPane.showConfirmDialog(null, srcDestPanel,
+                    int res = JOptionPane.showConfirmDialog(null, srcDestWindow,
                             "Please Enter Source and Destination Values (Natural Numbers only)", JOptionPane.OK_CANCEL_OPTION);
                     if(res==JOptionPane.OK_OPTION){
-                        String srcString = srcField.getText();
-                        String destString = destField.getText();
+                        String srcString = srcDestWindow.srcInput.getText();
+                        String destString = srcDestWindow.destInput.getText();
                         if(srcString.isEmpty() || destString.isEmpty()){
                             JOptionPane.showMessageDialog(null,"Empty Text Field");
                             return;
                         }
-                        src=Integer.parseInt(srcField.getText());
-                        dest=Integer.parseInt(destField.getText());
+                        src=Integer.parseInt(srcDestWindow.srcInput.getText());
+                        dest=Integer.parseInt(srcDestWindow.destInput.getText());
                         if(ga.getGraph().getNode(src)==null || ga.getGraph().getNode(dest)==null){
                             src=-1;
                             dest=-1;
                             JOptionPane.showMessageDialog(null,"Invalid Vertex key");
                             return;
                         }
-                    }else{
+                    }
                         return;
                     }
-                }else{
-                    int res = JOptionPane.showConfirmDialog(null,destPanel,"Enter Destination (Natural Numbers only)",JOptionPane.OK_CANCEL_OPTION);
-                    if(res==JOptionPane.OK_OPTION){
-                        String destString = destOnlyField.getText();
-                        if(destString.isEmpty()){
-                            JOptionPane.showMessageDialog(null,"Empty Text Field");
-                            return;
-                        }
-                        dest=Integer.parseInt(destString);
-                        if(ga.getGraph().getNode(dest)==null){
-                            src=-1;
-                            dest=-1;
-                            JOptionPane.showMessageDialog(null,"Invalid Vertex key");
-                            return;
-                        }
-                    }
-                }
             }
             status.setText("shortest path dist:" + String.valueOf(ga.shortestPathDist(src, dest)));
         } else if (e.getSource() == connect) {
             if (src == -1 || dest == -1) {
                 if(src==dest){
-                    int res = JOptionPane.showConfirmDialog(null, srcDestPanel,
+                    int res = JOptionPane.showConfirmDialog(null, srcDestWindow,
                             "Please Enter Source and Destination Values (Natural Numbers only)", JOptionPane.OK_CANCEL_OPTION);
                     if(res==JOptionPane.OK_OPTION){
-                        String srcString = srcField.getText();
-                        String destString = destField.getText();
+                        String srcString = srcDestWindow.srcInput.getText();
+                        String destString = srcDestWindow.destInput.getText();
                         if(srcString.isEmpty() || destString.isEmpty()){
                             JOptionPane.showMessageDialog(null,"Empty Text Field");
                             return;
                         }
-                        src=Integer.parseInt(srcField.getText());
-                        dest=Integer.parseInt(destField.getText());
+                        src=Integer.parseInt(srcDestWindow.srcInput.getText());
+                        dest=Integer.parseInt(srcDestWindow.destInput.getText());
                         if(ga.getGraph().getNode(src)==null || ga.getGraph().getNode(dest)==null){
                             src=-1;
                             dest=-1;
@@ -178,27 +138,11 @@ public class SidePanel extends JPanel implements ActionListener,NodeSelectedList
                     }else{
                         return;
                     }
-                }else{
-                    int res = JOptionPane.showConfirmDialog(null,destPanel,"Enter Destination (Natural Numbers only)",JOptionPane.OK_CANCEL_OPTION);
-                    if(res==JOptionPane.OK_OPTION){
-                        String destString = destOnlyField.getText();
-                        if(destString.isEmpty()){
-                            JOptionPane.showMessageDialog(null,"Empty Text Field");
-                            return;
-                        }
-                        dest=Integer.parseInt(destString);
-                        if(ga.getGraph().getNode(dest)==null){
-                            src=-1;
-                            dest=-1;
-                            JOptionPane.showMessageDialog(null,"Invalid Vertex key");
-                            return;
-                        }
-                    }
                 }
             }
             int res=JOptionPane.showConfirmDialog(null,weightPanel,"Enter Weight (Real Numbers only)",JOptionPane.OK_CANCEL_OPTION);
             if(res==JOptionPane.OK_OPTION){
-                String weightString=weightField.getText();
+                String weightString=weightPanel.weightInput.getText();
                 if(weightString.isEmpty()){
                     weight=1;
                     JOptionPane.showMessageDialog(null,"Didnt put any value generating automatic value of '1'");
@@ -214,17 +158,17 @@ public class SidePanel extends JPanel implements ActionListener,NodeSelectedList
         } else if (e.getSource() == shortestPath) {
             if (src == -1 || dest == -1) {
                 if(src==dest){
-                    int res = JOptionPane.showConfirmDialog(null, srcDestPanel,
+                    int res = JOptionPane.showConfirmDialog(null, srcDestWindow,
                             "Please Enter Source and Destination Values (Natural Numbers only)", JOptionPane.OK_CANCEL_OPTION);
                     if(res==JOptionPane.OK_OPTION){
-                        String srcString = srcField.getText();
-                        String destString = destField.getText();
+                        String srcString = srcDestWindow.srcInput.getText();
+                        String destString = srcDestWindow.destInput.getText();
                         if(srcString.isEmpty() || destString.isEmpty()){
                             JOptionPane.showMessageDialog(null,"Empty Text Field");
                             return;
                         }
-                        src=Integer.parseInt(srcField.getText());
-                        dest=Integer.parseInt(destField.getText());
+                        src=Integer.parseInt(srcDestWindow.srcInput.getText());
+                        dest=Integer.parseInt(srcDestWindow.destInput.getText());
                         if(ga.getGraph().getNode(src)==null || ga.getGraph().getNode(dest)==null){
                             src=-1;
                             dest=-1;
@@ -233,22 +177,6 @@ public class SidePanel extends JPanel implements ActionListener,NodeSelectedList
                         }
                     }else{
                         return;
-                    }
-                }else{
-                    int res = JOptionPane.showConfirmDialog(null,destPanel,"Enter Destination (Natural Numbers only)",JOptionPane.OK_CANCEL_OPTION);
-                    if(res==JOptionPane.OK_OPTION){
-                        String destString = destOnlyField.getText();
-                        if(destString.isEmpty()){
-                            JOptionPane.showMessageDialog(null,"Empty Text Field");
-                            return;
-                        }
-                        dest=Integer.parseInt(destString);
-                        if(ga.getGraph().getNode(dest)==null){
-                            src=-1;
-                            dest=-1;
-                            JOptionPane.showMessageDialog(null,"Invalid Vertex key");
-                            return;
-                        }
                     }
                 }
             }
@@ -336,45 +264,4 @@ public class SidePanel extends JPanel implements ActionListener,NodeSelectedList
             selectedNodes.setText("<html>src:" + String.valueOf(src)  + "<br/>dest:" + String.valueOf(dest) + "</html>");
         }
     }
-
-    private JTextField createFilteredTextField(boolean flag){
-        JTextField field =new JTextField();
-        AbstractDocument doc =(AbstractDocument) field.getDocument();
-        final int maxCharacters =1000;
-        doc.setDocumentFilter(new DocumentFilter(){
-            public void replace(FilterBypass fb, int offset, int len, String str, AttributeSet a) throws BadLocationException {
-                String regexType;
-                if(flag){
-                    regexType="^[1]?[0-9]{1,9999999}([.][0-9]{0,7})?$";
-                }else{
-                    regexType="^[1]?[0-9]{1,9999999}$";
-                }
-                String text= fb.getDocument().getText(0,fb.getDocument().getLength());
-                text+=str;
-                if((fb.getDocument().getLength()+str.length()-len)<=maxCharacters  && text.matches(regexType)){
-                    super.replace(fb, offset, len, str, a);
-                }else{
-                    Toolkit.getDefaultToolkit().beep();
-                }
-            }
-            public void insertString(FilterBypass fb,int offset,String str,AttributeSet a) throws BadLocationException {
-                String regexType;
-                if(flag){
-                    regexType="^[1]?[0-9]{1,9999999}([.][0-9]{0,7})?$";
-                }else{
-                    regexType="^[1]?[0-9]{1,9999999}$";
-                }
-                String text=fb.getDocument().getText(0,fb.getDocument().getLength());
-                text += str;
-                if ((fb.getDocument().getLength() + str.length()) <= maxCharacters
-                        && text.matches(regexType)) {
-                    super.insertString(fb, offset, str, a);
-                    }else{
-                    Toolkit.getDefaultToolkit().beep();
-                }
-            }
-        });
-        return field;
-    }
-
 }
