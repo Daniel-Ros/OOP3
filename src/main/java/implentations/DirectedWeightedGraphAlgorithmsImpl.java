@@ -249,6 +249,12 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
         return ret;
     }
 
+    /**
+     * An halper function the help us to find the minimum road from some node to one of the remianing nodes
+     * @param city
+     * @param remaining
+     * @return
+     */
     private List<NodeData> getMinRoad(NodeData city, LinkedList<NodeData> remaining) {
         Dijkstra d = new Dijkstra(city.getKey(),graph);
         d.run();
@@ -279,6 +285,12 @@ public class DirectedWeightedGraphAlgorithmsImpl implements DirectedWeightedGrap
         return ret;
     }
 
+    /**
+     * private function the help to find the minimul direct rode between nodes if exists
+     * @param city
+     * @param remaining
+     * @return
+     */
     private NodeData getMinDirectRoad(NodeData city, LinkedList<NodeData> remaining) {
         NodeData min = null;
         double minW = Double.POSITIVE_INFINITY;

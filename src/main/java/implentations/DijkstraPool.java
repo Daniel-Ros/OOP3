@@ -6,6 +6,9 @@ import api.NodeData;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Threadablle object that can be used to combine n Dijksta objects and run them one by one
+ */
 public class DijkstraPool extends Thread{
 
     List<NodeData> nodes;

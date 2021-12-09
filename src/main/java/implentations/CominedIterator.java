@@ -6,6 +6,11 @@ import api.EdgeData;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
+/**
+ * An Iterator that taks a list of iterator and makes them useable as obe
+ * @param <T>
+ */
 public class CominedIterator<T> implements Iterator<T> {
     ArrayList<Iterator<T>> its;
     int current;
@@ -15,6 +20,11 @@ public class CominedIterator<T> implements Iterator<T> {
         current = 0;
     }
 
+
+    /**
+     * add an iterator to the list
+     * @param it
+     */
     public void addIt(Iterator<T> it){
         its.add(it);
     }

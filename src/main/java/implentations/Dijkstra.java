@@ -7,6 +7,9 @@ import api.NodeData;
 import java.lang.instrument.Instrumentation;
 import java.util.*;
 
+/**
+ * The dijkstra algorithm basec on priority queue
+ */
 public class Dijkstra{
     private int src,dest;
     private DirectedWeightedGraph graph;
@@ -16,18 +19,32 @@ public class Dijkstra{
     HashMap<Integer,Integer> p;
     private HashMap<Integer,Double> d;
 
+    /**
+     * Dijkstra algorirhm to use to find a distance betwwen 2 nodes
+     * @param src
+     * @param dest
+     * @param g the graph
+     */
     Dijkstra(int src, int dest, DirectedWeightedGraph g){
         this.src = src;
         this.dest =dest;
         this.graph = g;
     }
 
+    /**
+     * Dijkstra algorithm to make a tree with all the distances from src
+     * @param src
+     * @param g the graph
+     */
     Dijkstra(int src, DirectedWeightedGraph g){
         this.src = src;
         this.dest =Integer.MAX_VALUE;
         this.graph = g;
     }
 
+    /**
+     * run the algorithm
+     */
     public void run() {
         while(Runtime.getRuntime().freeMemory() < graph.nodeSize() * 1000) {
             try {
@@ -126,11 +143,4 @@ public class Dijkstra{
         return ret;
     }
 
-
-    public void clear(){
-        this.graph = null;
-        this.d = null;
-        this.p = null;
-        this.ret = null;
-    }
 }
