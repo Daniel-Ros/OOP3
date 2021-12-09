@@ -54,15 +54,21 @@ once you are in the gui you can:
 
 ## images
 tsp:
+
 ![img.png](img.png)
+
 zoom:
-![](../../Videos/zoom.gif)
+
+![](zoom.gif)
+
 node edit:
 
 ![img_1.png](img_1.png)
 
 about:
+
 ![img_2.png](img_2.png)
+
 ##  Results
 
 These are the final results that I was able to get
