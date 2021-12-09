@@ -18,8 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-//TODO: add graph menu (edit node/edge// add node/edge // delete node/edge )
-//TODO: add an about menu
+// the top menu bar hold most of the advanced operations
 public class MenuBar extends JMenuBar implements ActionListener {
 
     JMenuItem load;
@@ -242,24 +241,6 @@ public class MenuBar extends JMenuBar implements ActionListener {
                 JOptionPane.showMessageDialog(null,cen);
                 getTopLevelAncestor().repaint();
             }
-//        }else if(e.getSource()==addVertex){
-//            KeyLocationWindow keyLocationPanel = new KeyLocationWindow();
-//            int k=-1;
-//            double xI=-1;
-//            double yI=-1;
-//
-//            int res = JOptionPane.showConfirmDialog(null, keyLocationPanel,
-//                    "Add Vertex", JOptionPane.OK_CANCEL_OPTION);
-//            if(res==JOptionPane.OK_OPTION){
-//                k=Integer.parseInt(keyLocationPanel.keyInput.getText());
-//                xI=Double.parseDouble(keyLocationPanel.xInput.getText());
-//                yI=Double.parseDouble(keyLocationPanel.yInput.getText());
-//                GeoLocationImpl xy= new GeoLocationImpl(xI,yI,0);
-//                NodeDataImpl temp= new NodeDataImpl(k,xy);
-//                ga.getGraph().addNode(temp);
-//                getTopLevelAncestor().repaint();
-//                ////needs to fix geo location to screen size
-//            }
         }else if(e.getSource()==deleteVertex){
             KeyWindow keyPanel = new KeyWindow();
             int key=-1;

@@ -9,7 +9,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-
+/**
+ * About window to display some information about the project
+ */
 public class AboutWindow extends JPanel{
     JLabel about;
     JLabel gitHubLink;

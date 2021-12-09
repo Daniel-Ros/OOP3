@@ -6,7 +6,9 @@ import implentations.DirectedWeightedGraphAlgorithmsImpl;
 import javax.swing.JFrame;
 import java.awt.*;
 
-
+/**
+ * This is the main window the combines all the panels together
+ */
 public class Window {
 
     DirectedWeightedGraphAlgorithms ga;

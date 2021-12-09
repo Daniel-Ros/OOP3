@@ -14,6 +14,9 @@ import java.awt.geom.Point2D;
 import java.util.*;
 import java.util.List;
 
+/**
+ * Main panel to draw the graph
+ */
 public class GrapPanel extends JPanel implements MouseListener, MouseWheelListener , MouseMotionListener {
     private DirectedWeightedGraphAlgorithms ga;
     private GeoLocation min,max;
@@ -43,6 +46,10 @@ public class GrapPanel extends JPanel implements MouseListener, MouseWheelListen
 
     }
 
+    /**
+     * Draws the graph
+     * @param graphics
+     */
     public void paint(Graphics graphics){
         System.out.println(Runtime.getRuntime().freeMemory());
         if(ga.getGraph() == null){
@@ -55,6 +62,7 @@ public class GrapPanel extends JPanel implements MouseListener, MouseWheelListen
         Graphics2D g = (Graphics2D)graphics;
         Iterator<NodeData> itNodes = graph.nodeIter();
 
+        //draw nodes
         while(itNodes.hasNext()){
             NodeData n = itNodes.next();
             GeoLocation posInScreen = getPoint2ScreenCord(n.getLocation().x(),n.getLocation().y());
@@ -66,6 +74,7 @@ public class GrapPanel extends JPanel implements MouseListener, MouseWheelListen
         }
         List<EdgeData> specialEdges = new ArrayList<>();
         Iterator<EdgeData> itEdges = graph.edgeIter();
+        //draw edges
         while(itEdges.hasNext()){
             EdgeData e = itEdges.next();
             GeoLocation p1 = getPoint2ScreenCord(graph.getNode(e.getSrc()).getLocation().x(),
@@ -81,6 +90,7 @@ public class GrapPanel extends JPanel implements MouseListener, MouseWheelListen
             }
         }
 
+        //draw special edges
         for (EdgeData e : specialEdges){
             g.setStroke(new BasicStroke(2));
             GeoLocation p1 = getPoint2ScreenCord(graph.getNode(e.getSrc()).getLocation().x(),
@@ -92,23 +102,28 @@ public class GrapPanel extends JPanel implements MouseListener, MouseWheelListen
         }
     }
 
+    //this listenre for the side panel showing the selectrd nodes
     public void setNodeSelectionListener(NodeSelectedListener l){
         listener = l;
     }
 
-
+    // Transform world position to screen sopition
     private GeoLocation getPoint2ScreenCord(double x,double y){
         double newx = (((max.x() - x) / (max.x() - min.x()))*this.getWidth()*0.9 + this.getWidth()*0.05 + pos.getX()) * zoom;
         double newy = (((max.y() - y) / (max.y() - min.y()))*this.getHeight()*0.9 + this.getHeight()*0.05 + pos.getY()) * zoom;
         return new GeoLocationImpl(newx,newy,0);
     }
 
+    // reverse to getPoint2ScreenCord
+    // Transform screenPosition to world position
     private GeoLocation getScreenCord2Point(double x,double y){
         double newx = max.x() - (((x/zoom)-pos.getX()-getWidth()*0.05D)*(max.x() - min.x()))/(getWidth()*0.9D);
         double newy = max.y() - (((y/zoom)-pos.getY()-getHeight()*0.05D)*(max.y() - min.y()))/(getHeight()*0.9D);
         return new GeoLocationImpl(newx,newy,0);
     }
 
+
+    //draws an arrow
     private void drawArrow (final Graphics2D gfx, final GeoLocation start, final GeoLocation end, final float arrowSize) {
 
         final double startx = start.x();

@@ -7,6 +7,9 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 import java.awt.*;
 
+/**
+ * Edit edge window.
+ */
 public class EditEdgeWindow extends JPanel {
     JLabel oldSrcLabel;
     JLabel oldDestLabel;
@@ -46,6 +49,10 @@ public class EditEdgeWindow extends JPanel {
 
     }
 
+    /**
+     * This filter let only real or natural number to be written to the textbox
+     * @return
+     */
     private JTextField createFilteredTextField(){
         JTextField field =new JTextField();
         AbstractDocument doc =(AbstractDocument) field.getDocument();
