@@ -2,6 +2,12 @@ package GUI;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 
 public class AboutWindow extends JPanel{
@@ -38,8 +44,22 @@ public class AboutWindow extends JPanel{
                 "    <br><li type=disc>Click hold moves graph panel<br>\n" +
                 "<br><br>\n" +
                 "  Made By: Daniel Rosenberg and Daniel Zinn\n" +
-                "<br><A HREF=\"https://github.com/Daniel-Ros/OOP3\">GitHub Link</a>.</br>\n" +
+                "<br>Click to Open GitHub</br>\n" +
                 "</html>");
+        about.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        String url= "https://github.com/Daniel-Ros/OOP3";
+        about.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                Desktop desktop= Desktop.getDesktop();
+                try{
+                    desktop.browse(new URI(url));
+                }catch (IOException | URISyntaxException er){
+                    er.printStackTrace();
+                }
+            }
+        });
         super.add(about);
     }
 }
