@@ -38,6 +38,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
     JMenuItem deleteEdge;
     JMenuItem editVertex;
     JMenuItem editEdge;
+    JMenuItem about;
 
 
     DirectedWeightedGraphAlgorithms ga;
@@ -50,13 +51,14 @@ public class MenuBar extends JMenuBar implements ActionListener {
         JMenu graph = new JMenu("graph");
         JMenu edges = new JMenu("Edges");
         JMenu vertex = new JMenu("Vertex");
+        JMenu About = new JMenu("About");
 
         load = new JMenuItem("load");
         save = new JMenuItem("save");
         sep = new JSeparator();
         exit = new JMenuItem("exit");
 
-
+        about= new JMenuItem("About");
         editVertex = new JMenuItem("Edit");
         editEdge = new JMenuItem("Edit");
         addVertex = new JMenuItem("Add");
@@ -70,6 +72,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
         isConnected = new JMenuItem("Is Connected");
         center = new JMenuItem("Center");
 
+        about.addActionListener(this);
         editEdge.addActionListener(this);
         editVertex.addActionListener(this);
         addVertex.addActionListener(this);
@@ -98,6 +101,8 @@ public class MenuBar extends JMenuBar implements ActionListener {
         algo.add(isConnected);
         algo.add(center);
 
+        About.add(about);
+
         //vertex.add(addVertex);
         vertex.add(deleteVertex);
         vertex.add(editVertex);
@@ -111,6 +116,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
         add(file);
         add(algo);
         add(graph);
+        add(About);
     }
 
     /**
@@ -345,6 +351,9 @@ public class MenuBar extends JMenuBar implements ActionListener {
                     nw.setVisible(true);
                 }
             }
+        }else if (e.getSource()==about){
+            AboutWindow aboutWindow= new AboutWindow();
+            JOptionPane.showMessageDialog(null,aboutWindow);
         }
     }
 }
