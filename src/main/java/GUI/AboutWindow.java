@@ -12,14 +12,16 @@ import java.net.URISyntaxException;
 
 public class AboutWindow extends JPanel{
     JLabel about;
+    JLabel gitHubLink;
     public AboutWindow(){
-        GridLayout layout = new GridLayout(1,1);
-        super.setLayout(layout);
+        setLayout(new GridBagLayout());
+        GridBagConstraints layout= new GridBagConstraints();
+        layout.insets = new Insets(2,2,2,2);
         about = new JLabel("<html>\n" +
                 "<b>About</b>\n" +
-                "<br><b>Menu Bar:</b></br>\n" +
-                "<b>File: </b>\n" +
-                "<br><li type=disc>Load: Import supported graph JSON file from Directory.</br>\n" +
+                "<br><b>Menu Bar:</b></br>\n" +"<br><br>"+
+                "<br><b>File: </b><br>\n" +
+                "<li type=disc>Load: Import supported graph JSON file from Directory.\n" +
                 "<br><li type=disc> Save: Export JSON file.</br>\n" +
                 "<li type=disc>Exit: close program.\n" +
                 "<br></br>\n" +
@@ -44,11 +46,12 @@ public class AboutWindow extends JPanel{
                 "    <br><li type=disc>Click hold moves graph panel<br>\n" +
                 "<br><br>\n" +
                 "  Made By: Daniel Rosenberg and Daniel Zinn\n" +
-                "<br>Click to Open GitHub</br>\n" +
                 "</html>");
-        about.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        gitHubLink= new JLabel("<html><A HREF=\"https://github.com/Daniel-Ros/OOP3\">GitHub Link</a><html>\n");
+        about.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        gitHubLink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         String url= "https://github.com/Daniel-Ros/OOP3";
-        about.addMouseListener(new MouseAdapter() {
+        gitHubLink.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
@@ -60,6 +63,13 @@ public class AboutWindow extends JPanel{
                 }
             }
         });
-        super.add(about);
+        layout.gridx= 1;
+        layout.ipadx=40;
+        layout.ipady=40;
+        super.add(about,layout);
+        layout.gridx= 1;
+        layout.ipadx=20;
+        layout.ipady=20;
+        super.add(gitHubLink,layout);
     }
 }

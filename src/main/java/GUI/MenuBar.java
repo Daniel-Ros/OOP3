@@ -353,6 +353,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
             }
         }else if (e.getSource()==about){
             AboutWindow aboutWindow= new AboutWindow();
+            aboutWindow.setSize(300,700);
             JOptionPane.showMessageDialog(null,aboutWindow);
         }
     }
