@@ -341,7 +341,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
                 if(nodeData!=null){
                     NodeWindow nw = new NodeWindow(nodeData);
                     nw.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    nw.setSize(350,200);
+                    nw.setSize(350,300);
                     nw.setVisible(true);
                 }
             }

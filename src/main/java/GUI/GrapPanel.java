@@ -155,7 +155,7 @@ public class GrapPanel extends JPanel implements MouseListener, MouseWheelListen
                         System.out.println("double cliled on node " + entry.getValue());
                         NodeWindow nw = new NodeWindow(ga.getGraph().getNode(entry.getValue()));
                         nw.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                        nw.setSize(350,200);
+                        nw.setSize(350,300);
                         nw.setVisible(true);
                     }
                     listener.selectNode(entry.getValue());
