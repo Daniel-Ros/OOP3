@@ -52,12 +52,39 @@ once you are in the gui you can:
 - you can run algorithms from the menu
 - you can edit the graph from the menu
 
+## images
+tsp:
+![img.png](img.png)
+zoom:
+![](../../Videos/zoom.gif)
+node edit:
+
+![img_1.png](img_1.png)
+
+about:
+![img_2.png](img_2.png)
 ##  Results
 
 These are the final results that I was able to get
 
-| size | algorithm | time to finish |
-|------|-----------|----------------|
+| size   | algorithm        | time to finish in Millisecons |
+|--------|------------------|-------------------------------|
+ | 1000   | isConnected      | 66                            |
+ | 1000   | shortestPath     | 45                            |
+ | 1000   | shortestPathDist | 26                            |
+ | 1000   | center           | 1703                          |
+ | 1000   | tsp              | 36                            |
+ | 10000  | isConnected      | 551                           |
+ | 10000  | shortestPath     | 342                           |
+ | 10000  | shortestPathDist | 274                           |
+ | 10000  | tsp              | 1124                          |
+ | 10000  | center           | 529873                        |
+ | 100000 | isConnected      | 8095                          |
+ | 100000 | shortestPath     | 5500                          |
+ | 100000 | shortestPathDist | 5419                          |
+ | 100000 | tsp              | 27946                         |
+ | 100000 | center           | > 30 min                      |
+
 
 
 ## Assigment Instructions

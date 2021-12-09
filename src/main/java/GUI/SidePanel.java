@@ -199,6 +199,7 @@ public class SidePanel extends JPanel implements ActionListener,NodeSelectedList
                 getTopLevelAncestor().repaint();
             }
         }else if (e.getSource() == tsp) {
+            selectedNodes.setText("");
             if(!isSelectingTspNodes){
                 status.setText("<html>Click on the wanted nodes<br/>When done, Click on the tsp button again</html>");
                 tspNodes = new ArrayList<>();
@@ -209,15 +210,13 @@ public class SidePanel extends JPanel implements ActionListener,NodeSelectedList
                     status.setText("No path");
                     return;
                 }
-                String stations = "" + r.get(0).getKey();
                 r.get(0).setTag(Color.red.getRGB());
                 for (int i = 1; i < r.size(); i++) {
                     r.get(i).setTag(Color.red.getRGB());
                     EdgeData edge = ga.getGraph().getEdge(r.get(i - 1).getKey(), r.get(i).getKey());
                     edge.setTag(Color.red.getRGB());
-                    stations += "->" + r.get(i).getKey();
                 }
-                status.setText(stations);
+                status.setText("");
                 getTopLevelAncestor().repaint();
                 isSelectingTspNodes = false;
             }
@@ -257,12 +256,15 @@ public class SidePanel extends JPanel implements ActionListener,NodeSelectedList
             return;
         }else if(src == -1){
             src = node;
+            ga.getGraph().getNode(src).setTag(Color.blue.getRGB());
             selectedNodes.setText("src:" + String.valueOf(node));
         }else {
             if(node == src){
                 return;
             }
             dest = node;
+            ga.getGraph().getNode(src).setTag(Color.blue.getRGB());
+            ga.getGraph().getNode(dest).setTag(Color.cyan.getRGB());
             selectedNodes.setText("<html>src:" + String.valueOf(src)  + "<br/>dest:" + String.valueOf(dest) + "</html>");
         }
     }

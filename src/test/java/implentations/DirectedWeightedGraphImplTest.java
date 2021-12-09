@@ -2,9 +2,15 @@ package implentations;
 
 import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
+import api.EdgeData;
+import api.NodeData;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
+import javax.xml.soap.Node;
 import java.awt.*;
+import java.io.FileNotFoundException;
+import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -56,14 +62,54 @@ class DirectedWeightedGraphImplTest {
 
     @Test
     void nodeIter() {
+        dwga.load("data/G1.json");
+        DirectedWeightedGraph g = dwga.getGraph();
+        int i = 1;
+        Iterator<NodeData> it = g.nodeIter();
+        while (it.hasNext()) {
+            i++;
+            it.next();
+        }
+        assertNotEquals(i,g.nodeSize());
+
+        assertThrows(RuntimeException.class, new Executable() {
+         @Override
+         public void execute() throws Throwable {
+             dwga.load("data/G1.json");
+             DirectedWeightedGraph g = dwga.getGraph();
+             Iterator<NodeData> it = g.nodeIter();
+             while (it.hasNext()) {
+                 g.connect(0,12,1);
+                 it.next();
+             }
+         }
+     });
     }
 
     @Test
     void edgeIter() {
-    }
+        dwga.load("data/G1.json");
+        DirectedWeightedGraph g = dwga.getGraph();
+        int i = 1;
+        Iterator<EdgeData> it = g.edgeIter();
+        while (it.hasNext()) {
+            i++;
+            it.next();
+        }
+        assertNotEquals(i,g.nodeSize());
 
-    @Test
-    void testEdgeIter() {
+        assertThrows(RuntimeException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                dwga.load("data/G1.json");
+                DirectedWeightedGraph g = dwga.getGraph();
+                Iterator<EdgeData> it = g.edgeIter(1);
+                while (it.hasNext()) {
+                    g.connect(0,12,1);
+                    it.next();
+                }
+            }
+        });
     }
 
     @Test

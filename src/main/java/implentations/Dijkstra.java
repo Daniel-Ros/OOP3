@@ -7,7 +7,7 @@ import api.NodeData;
 import java.lang.instrument.Instrumentation;
 import java.util.*;
 
-public class Dijkstra extends Thread{
+public class Dijkstra{
     private int src,dest;
     private DirectedWeightedGraph graph;
     private List<NodeData> ret;
@@ -28,9 +28,6 @@ public class Dijkstra extends Thread{
         this.graph = g;
     }
 
-
-
-    @Override
     public void run() {
         while(Runtime.getRuntime().freeMemory() < graph.nodeSize() * 1000) {
             try {

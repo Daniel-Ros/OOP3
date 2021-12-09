@@ -12,6 +12,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 import java.util.*;
+import java.util.List;
 
 public class GrapPanel extends JPanel implements MouseListener, MouseWheelListener , MouseMotionListener {
     private DirectedWeightedGraphAlgorithms ga;
@@ -63,7 +64,7 @@ public class GrapPanel extends JPanel implements MouseListener, MouseWheelListen
             g.draw(c);
             g.drawString(String.valueOf(n.getKey()),(int)posInScreen.x() - 15 ,(int)posInScreen.y() - 15);
         }
-
+        List<EdgeData> specialEdges = new ArrayList<>();
         Iterator<EdgeData> itEdges = graph.edgeIter();
         while(itEdges.hasNext()){
             EdgeData e = itEdges.next();
@@ -73,12 +74,21 @@ public class GrapPanel extends JPanel implements MouseListener, MouseWheelListen
                                                     graph.getNode(e.getDest()).getLocation().y());
             g.setPaint(new Color(e.getTag()));
             if(e.getTag() != 0){
-                g.setStroke(new BasicStroke(10));
+                specialEdges.add(e);
             }else{
                 g.setStroke(new BasicStroke(1));
+                drawArrow(g,p1,p2,10F*(float)zoom);
             }
-            drawArrow(g,p1,p2,15F);
+        }
 
+        for (EdgeData e : specialEdges){
+            g.setStroke(new BasicStroke(2));
+            GeoLocation p1 = getPoint2ScreenCord(graph.getNode(e.getSrc()).getLocation().x(),
+                    graph.getNode(e.getSrc()).getLocation().y());
+            GeoLocation p2 = getPoint2ScreenCord(graph.getNode(e.getDest()).getLocation().x(),
+                    graph.getNode(e.getDest()).getLocation().y());
+            g.setPaint(new Color(e.getTag()));
+            drawArrow(g,p1,p2,15F);
         }
     }
 

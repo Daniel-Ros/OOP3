@@ -39,7 +39,11 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
      */
     @Override
     public EdgeData getEdge(int src, int dest) {
-        return ((NodeDataImpl)nodes.get(src)).getEdgeByDest(dest);
+        try {
+            return ((NodeDataImpl)nodes.get(src)).getEdgeByDest(dest);
+        }catch (Exception e){
+            return null;
+        }
     }
 
     /**
@@ -65,6 +69,8 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
     @Override
     public void connect(int src, int dest, double w) {
         if (getEdge(src,dest) != null)
+            return;
+        if(getNode(src) == null || getNode(dest) == null)
             return;
         numOfEdges++;
         EdgeDataImpl e = new EdgeDataImpl(src,dest,w);
@@ -138,10 +144,10 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
         for (EdgeData e: deleteEdges){
             removeEdge(e.getSrc(),e.getDest());
         }
-
+        NodeData n = nodes.get(key);
         nodes.remove(key);
 
-        return null;
+        return n;
     }
 
     /**
